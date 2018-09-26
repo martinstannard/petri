@@ -52,8 +52,8 @@ defmodule Processor.Scene.Arena do
   def handle_info(:animate, state) do
     state.turtles
     |> Enum.each(fn t ->
-      Turtle.turn(t, Enum.random(-100..100) / 1000.0)
-      Turtle.fd(t, 1.0)
+      Turtle.turn(t, Enum.random(-100..100) / 300.0)
+      Turtle.fd(t, 2.0)
     end)
 
     draw(state)
@@ -62,14 +62,15 @@ defmodule Processor.Scene.Arena do
   end
 
   def handle_input({:key, {"N", :press, _} = key}, _context, state) do
-    {:ok, turtle} = Processor.Turtle.start("turtle_#{state.count}")
+    {:noreply, hatch(state)}
+  end
 
-    new_state = %{
-      state
-      | graph: add_turtle(state),
-        turtles: [turtle] ++ state.turtles,
-        count: state.count + 1
-    }
+  def handle_input({:key, {"P", :press, _} = key}, _context, state) do
+    new_state =
+      0..10
+      |> Enum.reduce(state, fn _i, s ->
+        hatch(s)
+      end)
 
     {:noreply, new_state}
   end
@@ -94,6 +95,17 @@ defmodule Processor.Scene.Arena do
       )
     end)
     |> push_graph
+  end
+
+  def hatch(state) do
+    {:ok, turtle} = Processor.Turtle.start("turtle_#{state.count}")
+
+    new_state = %{
+      state
+      | graph: add_turtle(state),
+        turtles: [turtle] ++ state.turtles,
+        count: state.count + 1
+    }
   end
 
   def add_turtle(state) do
