@@ -14,7 +14,7 @@ defmodule Processor.Scene.Splash do
 
   @parrot_path :code.priv_dir(:processor)
                |> Path.join("/static/images/scenic_parrot.png")
-  @parrot_hash Scenic.Cache.Hash.file!( @parrot_path, :sha )
+  @parrot_hash Scenic.Cache.Hash.file!(@parrot_path, :sha)
 
   @parrot_width 62
   @parrot_height 114

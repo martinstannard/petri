@@ -6,12 +6,12 @@ use Mix.Config
 config :processor, :viewport, %{
   name: :main_viewport,
   size: {700, 600},
-  default_scene: {Processor.Scene.Splash, Processor.Scene.Sensor},
+  default_scene: {Processor.Scene.Arena, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,
       name: :glfw,
-      opts: [resizeable: false, title: "processor"]
+      opts: [resizeable: false, title: "Processor"]
     }
   ]
 }
