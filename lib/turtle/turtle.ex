@@ -45,10 +45,14 @@ defmodule Processor.Turtle do
   end
 
   def right(state, angle) do
-    %{state | heading: state.heading + angle}
+    %{state | heading: state.heading - angle}
   end
 
   def forward(state, distance) do
-    %{state | x: state.x + distance, y: state.y + distance}
+    %{
+      state
+      | x: state.x + :math.sin(state.heading) * distance,
+        y: state.y - :math.cos(state.heading) * distance
+    }
   end
 end

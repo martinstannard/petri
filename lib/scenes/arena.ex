@@ -15,6 +15,9 @@ defmodule Processor.Scene.Arena do
   \"Arena\" turtles
   """
 
+  @animate_ms 16
+  @tri {{0, -20}, {10, 10}, {-10, 10}}
+
   @graph Graph.build(font: :roboto, font_size: 24)
          |> group(fn g ->
            g
@@ -26,8 +29,6 @@ defmodule Processor.Scene.Arena do
          end)
 
   def init(data, opts) do
-    IO.inspect(data, label: "data")
-    IO.inspect(opts, label: "opts")
     viewport = opts[:viewport]
 
     graph =
@@ -35,17 +36,29 @@ defmodule Processor.Scene.Arena do
       |> push_graph()
 
     # start a very simple animation timer
-    # {:ok, timer} = :timer.send_interval(@animate_ms, :animate)
+    {:ok, timer} = :timer.send_interval(@animate_ms, :animate)
 
     state = %{
       viewport: viewport,
       graph: graph,
       turtles: [],
-      count: 0
-      # timer: timer
+      count: 0,
+      timer: timer
     }
 
     {:ok, state}
+  end
+
+  def handle_info(:animate, state) do
+    state.turtles
+    |> Enum.each(fn t ->
+      Turtle.turn(t, Enum.random(-100..100) / 1000.0)
+      Turtle.fd(t, 1.0)
+    end)
+
+    draw(state)
+
+    {:noreply, state}
   end
 
   def handle_input({:key, {"N", :press, _} = key}, _context, state) do
@@ -58,41 +71,36 @@ defmodule Processor.Scene.Arena do
         count: state.count + 1
     }
 
-    update(new_state)
-
     {:noreply, new_state}
   end
 
   def handle_input(_input, _context, state), do: {:noreply, state}
 
-  def update(state) do
+  def draw(state) do
     graph = state.graph
 
     state.turtles
-    |> Enum.reduce(graph, fn t, g ->
+    |> Enum.reduce(state.graph, fn t, g ->
       turtle = Turtle.state(t)
-      IO.inspect(turtle)
 
       g
-      |> Graph.modify(turtle.id, &text(&1, "turtle", translate: {turtle.x, turtle.y}))
+      |> Graph.modify(
+        turtle.id,
+        &triangle(&1, @tri,
+          translate: {turtle.x, turtle.y},
+          rotate: turtle.heading,
+          fill: {:color, :green}
+        )
+      )
     end)
     |> push_graph
   end
 
   def add_turtle(state) do
-    graph =
-      state.graph
-      |> circle(20,
-        id: "circle_#{state.count}",
-        translate: {200, 30 + state.count * 30}
-      )
-      |> text("#{state.count}",
-        id: "turtle_#{state.count}",
-        translate: {200, 30 + state.count * 30}
-      )
-
-    # |> push_graph
-
-    graph
+    state.graph
+    |> triangle(@tri,
+      id: "turtle_#{state.count}",
+      fill: {:color, :green}
+    )
   end
 end
