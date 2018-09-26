@@ -1,8 +1,8 @@
 defmodule Processor.Turtle do
   use GenServer
 
-  def start do
-    GenServer.start_link(__MODULE__, nil)
+  def start(id) do
+    GenServer.start_link(__MODULE__, id)
   end
 
   def turn(pid, angle) do
@@ -17,14 +17,15 @@ defmodule Processor.Turtle do
     GenServer.call(pid, :state)
   end
 
-  def init(_) do
+  def init(id) do
     {
       :ok,
       %{
+        id: id,
         heading: 0.0,
         velocity: 0.0,
-        x: 0.0,
-        y: 0.0
+        x: Enum.random(0..500),
+        y: Enum.random(0..500)
       }
     }
   end

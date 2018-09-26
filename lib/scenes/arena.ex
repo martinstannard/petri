@@ -49,28 +49,16 @@ defmodule Processor.Scene.Arena do
   end
 
   def handle_input({:key, {"N", :press, _} = key}, _context, state) do
-    {:ok, turtle} = Processor.Turtle.start()
-
-    graph =
-      state.graph
-      |> circle(20,
-        id: "circle_#{state.count}",
-        translate: {200, 30 + state.count * 30}
-      )
-      |> text("#{state.count}",
-        id: "text_#{state.count}",
-        translate: {200, 30 + state.count * 30}
-      )
-      |> push_graph
+    {:ok, turtle} = Processor.Turtle.start("turtle_#{state.count}")
 
     new_state = %{
       state
-      | graph: graph,
+      | graph: add_turtle(state),
         turtles: [turtle] ++ state.turtles,
         count: state.count + 1
     }
 
-    update(state)
+    update(new_state)
 
     {:noreply, new_state}
   end
@@ -78,15 +66,17 @@ defmodule Processor.Scene.Arena do
   def handle_input(_input, _context, state), do: {:noreply, state}
 
   def update(state) do
+    graph = state.graph
+
     state.turtles
-    |> Enum.each(fn t ->
+    |> Enum.reduce(graph, fn t, g ->
       turtle = Turtle.state(t)
       IO.inspect(turtle)
-      # state.graph
 
-      # state.graph.add()
-      # IO.inspect(t)
+      g
+      |> Graph.modify(turtle.id, &text(&1, "turtle", translate: {turtle.x, turtle.y}))
     end)
+    |> push_graph
   end
 
   def add_turtle(state) do
@@ -97,9 +87,12 @@ defmodule Processor.Scene.Arena do
         translate: {200, 30 + state.count * 30}
       )
       |> text("#{state.count}",
-        id: "text_#{state.count}",
+        id: "turtle_#{state.count}",
         translate: {200, 30 + state.count * 30}
       )
-      |> push_graph
+
+    # |> push_graph
+
+    graph
   end
 end
