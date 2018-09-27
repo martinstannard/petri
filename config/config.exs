@@ -5,13 +5,13 @@ use Mix.Config
 # Configure the main viewport for the Scenic application
 config :processor, :viewport, %{
   name: :main_viewport,
-  size: {700, 600},
+  size: {800, 800},
   default_scene: {Processor.Scene.Arena, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,
       name: :glfw,
-      opts: [resizeable: false, title: "Processor"]
+      opts: [resizeable: false, title: "Arena"]
     }
   ]
 }

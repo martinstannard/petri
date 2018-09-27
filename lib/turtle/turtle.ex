@@ -1,6 +1,8 @@
 defmodule Processor.Turtle do
   use GenServer
 
+  @colors ~w(red green blue yellow orange brown violet purple plum olive navy silver sienna tan teal thistle tomato orchid hot_pink gold golden_rod fuchsia dodger_blue indigo magenta maroon)a
+
   def start(id) do
     GenServer.start_link(__MODULE__, id)
   end
@@ -22,10 +24,11 @@ defmodule Processor.Turtle do
       :ok,
       %{
         id: id,
-        heading: 0.0,
+        heading: Enum.random(0..628) / 100.0,
         velocity: 0.0,
-        x: Enum.random(0..500),
-        y: Enum.random(0..500)
+        x: Enum.random(0..800),
+        y: Enum.random(0..800),
+        color: Enum.random(@colors)
       }
     }
   end
@@ -51,8 +54,22 @@ defmodule Processor.Turtle do
   def forward(state, distance) do
     %{
       state
-      | x: state.x + :math.sin(state.heading) * distance,
-        y: state.y - :math.cos(state.heading) * distance
+      | x: new_x(state.x, state.heading, distance),
+        y: new_y(state.y, state.heading, distance)
     }
   end
+
+  defp new_x(x, heading, distance) do
+    new_x = x + :math.sin(heading) * distance
+    bound(new_x)
+  end
+
+  defp new_y(y, heading, distance) do
+    new_y = y - :math.cos(heading) * distance
+    bound(new_y)
+  end
+
+  def bound(coord) when coord > 800.0, do: coord - 800.0
+  def bound(coord) when coord < 0.0, do: coord + 800.0
+  def bound(coord), do: coord
 end

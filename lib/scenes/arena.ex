@@ -21,7 +21,7 @@ defmodule Processor.Scene.Arena do
   @graph Graph.build(font: :roboto, font_size: 24)
          |> group(fn g ->
            g
-           |> text("This is Scenic", translate: {15, 20})
+           # |> text("This is Scenic", translate: {15, 20})
 
            # Nav and Notes are added last so that they draw on top
            # |> Nav.add_to_graph(__MODULE__)
@@ -90,7 +90,7 @@ defmodule Processor.Scene.Arena do
         &triangle(&1, @tri,
           translate: {turtle.x, turtle.y},
           rotate: turtle.heading,
-          fill: {:color, :green}
+          fill: {:color, turtle.color}
         )
       )
     end)
