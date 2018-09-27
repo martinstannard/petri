@@ -23,6 +23,7 @@ defmodule Processor.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 0.10.0"},
       {:scenic, "~> 0.8"},
       {:scenic_driver_glfw, "~> 0.8"},
 

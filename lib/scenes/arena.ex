@@ -21,10 +21,15 @@ defmodule Processor.Scene.Arena do
   @graph Graph.build(font: :roboto, font_size: 24)
          |> group(fn g ->
            g
-           # |> text("This is Scenic", translate: {15, 20})
+           |> text("Population: ", id: :population, translate: {20, 750})
+           |> button("+1", id: :btn_one, theme: :primary, translate: {600, 750})
+           |> button("+10", id: :btn_ten, theme: :primary, translate: {700, 750})
+           |> text("Velocity: ", id: :velocity_text, translate: {200, 750})
+           |> slider({{0.0, 10.0}, 2.0}, id: :velocity, t: {250, 750})
 
            # Nav and Notes are added last so that they draw on top
-           # |> Nav.add_to_graph(__MODULE__)
+           |> Nav.add_to_graph(__MODULE__)
+
            # |> Notes.add_to_graph(@notes)
          end)
 
@@ -43,6 +48,7 @@ defmodule Processor.Scene.Arena do
       graph: graph,
       turtles: [],
       count: 0,
+      velocity: 2.0,
       timer: timer
     }
 
@@ -52,30 +58,14 @@ defmodule Processor.Scene.Arena do
   def handle_info(:animate, state) do
     state.turtles
     |> Enum.each(fn t ->
-      Turtle.turn(t, Enum.random(-100..100) / 300.0)
-      Turtle.fd(t, 2.0)
+      Turtle.turn(t, Enum.random(-100..100) / 600.0)
+      Turtle.fd(t, state.velocity)
     end)
 
     draw(state)
 
     {:noreply, state}
   end
-
-  def handle_input({:key, {"N", :press, _} = key}, _context, state) do
-    {:noreply, hatch(state)}
-  end
-
-  def handle_input({:key, {"P", :press, _} = key}, _context, state) do
-    new_state =
-      0..10
-      |> Enum.reduce(state, fn _i, s ->
-        hatch(s)
-      end)
-
-    {:noreply, new_state}
-  end
-
-  def handle_input(_input, _context, state), do: {:noreply, state}
 
   def draw(state) do
     graph = state.graph
@@ -94,7 +84,15 @@ defmodule Processor.Scene.Arena do
         )
       )
     end)
+    |> Graph.modify(:population, &text(&1, "Population: #{state.count}"))
     |> push_graph
+  end
+
+  def hatch_n(state, count) do
+    1..count
+    |> Enum.reduce(state, fn _i, s ->
+      hatch(s)
+    end)
   end
 
   def hatch(state) do
@@ -108,11 +106,24 @@ defmodule Processor.Scene.Arena do
     }
   end
 
-  def add_turtle(state) do
-    state.graph
+  def add_turtle(%{graph: graph, count: count}) do
+    graph
     |> triangle(@tri,
-      id: "turtle_#{state.count}",
+      id: "turtle_#{count}",
       fill: {:color, :green}
     )
+  end
+
+  def filter_event({:click, :btn_one}, _, state) do
+    {:stop, hatch_n(state, 1)}
+  end
+
+  def filter_event({:click, :btn_ten}, _, state) do
+    {:stop, hatch_n(state, 10)}
+  end
+
+  def filter_event({:value_changed, :velocity, velocity}, _, state) do
+    new_state = %{state | velocity: velocity}
+    {:stop, new_state}
   end
 end
