@@ -12,6 +12,8 @@ defmodule Processor do
     # start the application with the viewport
     children = [
       supervisor(Processor.Sensor.Supervisor, []),
+      {DynamicSupervisor, name: TurtleSupervisor, strategy: :one_for_one},
+      # supervisor(Processor.Turtle.Supervisor, []),
       supervisor(Scenic, viewports: [main_viewport_config])
     ]
 

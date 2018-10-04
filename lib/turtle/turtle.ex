@@ -9,7 +9,7 @@ defmodule Processor.Turtle do
 
   @colors ~w(red green blue yellow orange brown violet purple plum olive navy silver sienna tan teal thistle tomato orchid hot_pink gold golden_rod fuchsia dodger_blue indigo magenta maroon)a
 
-  def start(id) do
+  def start_link(id) do
     GenServer.start_link(__MODULE__, id)
   end
 
@@ -67,11 +67,6 @@ defmodule Processor.Turtle do
           fill: {:color, state.color}
         )
       )
-
-    new_state = %{
-      state
-      | graph: g
-    }
 
     {:reply, g, state}
   end

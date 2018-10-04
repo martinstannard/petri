@@ -52,7 +52,9 @@ defmodule Processor.Scene.Arena do
       timer: timer
     }
 
-    {:ok, state}
+    new_state = hatch_n(state, 1)
+
+    {:ok, new_state}
   end
 
   def handle_info(:animate, state) do
@@ -82,7 +84,8 @@ defmodule Processor.Scene.Arena do
   end
 
   def hatch(state) do
-    {:ok, turtle} = Processor.Turtle.start("turtle_#{state.count}")
+    {:ok, turtle} =
+      DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, "turtle_#{state.count}"})
 
     new_state = %{
       state
@@ -111,5 +114,14 @@ defmodule Processor.Scene.Arena do
   def filter_event({:value_changed, :velocity, velocity}, _, state) do
     new_state = %{state | velocity: velocity}
     {:stop, new_state}
+  end
+
+  def turtles do
+    TurtleSupervisor
+    |> DynamicSupervisor.which_children()
+    |> Enum.map(fn t ->
+      {_, pid, _, _} = t
+      pid
+    end)
   end
 end
