@@ -21,11 +21,9 @@ defmodule Processor.Scene.Arena do
   @graph Graph.build(font: :roboto, font_size: 24)
          |> group(fn g ->
            g
-           |> text("Population: ", id: :population, translate: {20, 750})
+           |> text("Turtles: ", id: :population, translate: {20, 750})
            |> button("+1", id: :btn_one, theme: :primary, translate: {600, 750})
            |> button("+10", id: :btn_ten, theme: :primary, translate: {700, 750})
-           |> text("Velocity: ", id: :velocity_text, translate: {200, 750})
-           |> slider({{0.0, 10.0}, 2.0}, id: :velocity, t: {250, 750})
 
            # Nav and Notes are added last so that they draw on top
            |> Nav.add_to_graph(__MODULE__)
@@ -109,11 +107,6 @@ defmodule Processor.Scene.Arena do
 
   def filter_event({:click, :btn_ten}, _, state) do
     {:stop, hatch_n(state, 10)}
-  end
-
-  def filter_event({:value_changed, :velocity, velocity}, _, state) do
-    new_state = %{state | velocity: velocity}
-    {:stop, new_state}
   end
 
   def turtles do
