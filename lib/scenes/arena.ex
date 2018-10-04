@@ -63,12 +63,12 @@ defmodule Processor.Scene.Arena do
   end
 
   def update(state) do
-    state.turtles
+    turtles
     |> Enum.each(&Turtle.update(&1))
   end
 
   def draw(state) do
-    state.turtles
+    turtles
     |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
     |> Graph.modify(:population, &text(&1, "Population: #{state.count}"))
     |> push_graph
