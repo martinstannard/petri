@@ -56,34 +56,20 @@ defmodule Processor.Scene.Arena do
   end
 
   def handle_info(:animate, state) do
-    state.turtles
-    |> Enum.each(fn t ->
-      Turtle.turn(t, Enum.random(-100..100) / 600.0)
-      Turtle.fd(t, state.velocity)
-    end)
-
+    update(state)
     draw(state)
 
     {:noreply, state}
   end
 
-  def draw(state) do
-    graph = state.graph
-
+  def update(state) do
     state.turtles
-    |> Enum.reduce(state.graph, fn t, g ->
-      turtle = Turtle.state(t)
+    |> Enum.each(&Turtle.update(&1))
+  end
 
-      g
-      |> Graph.modify(
-        turtle.id,
-        &triangle(&1, @tri,
-          translate: {turtle.x, turtle.y},
-          rotate: turtle.heading,
-          fill: {:color, turtle.color}
-        )
-      )
-    end)
+  def draw(state) do
+    state.turtles
+    |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
     |> Graph.modify(:population, &text(&1, "Population: #{state.count}"))
     |> push_graph
   end

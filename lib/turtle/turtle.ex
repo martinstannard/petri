@@ -1,6 +1,12 @@
 defmodule Processor.Turtle do
   use GenServer
 
+  alias Scenic.Graph
+
+  import Scenic.Primitives
+
+  @tri {{0, -20}, {10, 10}, {-10, 10}}
+
   @colors ~w(red green blue yellow orange brown violet purple plum olive navy silver sienna tan teal thistle tomato orchid hot_pink gold golden_rod fuchsia dodger_blue indigo magenta maroon)a
 
   def start(id) do
@@ -19,18 +25,55 @@ defmodule Processor.Turtle do
     GenServer.call(pid, :state)
   end
 
+  def update(pid) do
+    GenServer.cast(pid, :update)
+  end
+
+  def draw(pid, graph) do
+    GenServer.call(pid, {:draw, graph})
+  end
+
   def init(id) do
     {
       :ok,
       %{
         id: id,
         heading: Enum.random(0..628) / 100.0,
-        velocity: 0.0,
+        velocity: Enum.random(0..100) / 10.0,
         x: Enum.random(0..800),
         y: Enum.random(0..800),
         color: Enum.random(@colors)
       }
     }
+  end
+
+  def handle_cast(:update, state) do
+    new_state =
+      state
+      |> right(Enum.random(-100..100) / 600.0)
+      |> forward(state.velocity)
+
+    {:noreply, new_state}
+  end
+
+  def handle_call({:draw, graph}, _, state) do
+    g =
+      graph
+      |> Graph.modify(
+        state.id,
+        &triangle(&1, @tri,
+          translate: {state.x, state.y},
+          rotate: state.heading,
+          fill: {:color, state.color}
+        )
+      )
+
+    new_state = %{
+      state
+      | graph: g
+    }
+
+    {:reply, g, state}
   end
 
   def handle_call(:state, _, state) do
@@ -54,8 +97,8 @@ defmodule Processor.Turtle do
   def forward(state, distance) do
     %{
       state
-      | x: new_x(state.x, state.heading, distance),
-        y: new_y(state.y, state.heading, distance)
+      | x: new_x(state.x, state.heading, state.velocity),
+        y: new_y(state.y, state.heading, state.velocity)
     }
   end
 
