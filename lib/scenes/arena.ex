@@ -45,7 +45,6 @@ defmodule Processor.Scene.Arena do
       viewport: viewport,
       graph: graph,
       count: 0,
-      velocity: 2.0,
       timer: timer
     }
 
@@ -73,13 +72,6 @@ defmodule Processor.Scene.Arena do
     |> push_graph
   end
 
-  def hatch_n(state, count) do
-    1..count
-    |> Enum.reduce(state, fn _i, s ->
-      hatch(s)
-    end)
-  end
-
   def hatch(state) do
     {:ok, turtle} =
       DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, "turtle_#{state.count}"})
@@ -91,12 +83,16 @@ defmodule Processor.Scene.Arena do
     }
   end
 
+  def hatch_n(state, count) do
+    1..count
+    |> Enum.reduce(state, fn _i, s ->
+      hatch(s)
+    end)
+  end
+
   def add_turtle(%{graph: graph, count: count}) do
     graph
-    |> triangle(@tri,
-      id: "turtle_#{count}",
-      fill: {:color, :green}
-    )
+    |> triangle(@tri, id: "turtle_#{count}")
   end
 
   def filter_event({:click, :btn_one}, _, state) do

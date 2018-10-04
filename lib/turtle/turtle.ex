@@ -13,18 +13,6 @@ defmodule Processor.Turtle do
     GenServer.start_link(__MODULE__, id)
   end
 
-  def turn(pid, angle) do
-    GenServer.call(pid, {:turn, angle})
-  end
-
-  def fd(pid, distance) do
-    GenServer.call(pid, {:fd, distance})
-  end
-
-  def state(pid) do
-    GenServer.call(pid, :state)
-  end
-
   def update(pid) do
     GenServer.cast(pid, :update)
   end
@@ -39,7 +27,8 @@ defmodule Processor.Turtle do
       %{
         id: id,
         heading: Enum.random(0..628) / 100.0,
-        velocity: Enum.random(0..100) / 10.0,
+        angle: Enum.random(200..800),
+        velocity: Enum.random(0..100) / 20.0,
         x: Enum.random(0..800),
         y: Enum.random(0..800),
         color: Enum.random(@colors)
@@ -50,8 +39,8 @@ defmodule Processor.Turtle do
   def handle_cast(:update, state) do
     new_state =
       state
-      |> right(Enum.random(-100..100) / 600.0)
-      |> forward(state.velocity)
+      |> right(Enum.random(-100..100) / state.angle)
+      |> forward
 
     {:noreply, new_state}
   end
@@ -71,25 +60,11 @@ defmodule Processor.Turtle do
     {:reply, g, state}
   end
 
-  def handle_call(:state, _, state) do
-    {:reply, state, state}
-  end
-
-  def handle_call({:turn, angle}, _, state) do
-    new_state = right(state, angle)
-    {:reply, new_state, new_state}
-  end
-
-  def handle_call({:fd, distance}, _, state) do
-    new_state = forward(state, distance)
-    {:reply, new_state, new_state}
-  end
-
   def right(state, angle) do
     %{state | heading: state.heading - angle}
   end
 
-  def forward(state, distance) do
+  def forward(state) do
     %{
       state
       | x: new_x(state.x, state.heading, state.velocity),
