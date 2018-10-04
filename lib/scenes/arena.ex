@@ -44,7 +44,6 @@ defmodule Processor.Scene.Arena do
     state = %{
       viewport: viewport,
       graph: graph,
-      turtles: [],
       count: 0,
       velocity: 2.0,
       timer: timer
@@ -88,7 +87,6 @@ defmodule Processor.Scene.Arena do
     new_state = %{
       state
       | graph: add_turtle(state),
-        turtles: [turtle] ++ state.turtles,
         count: state.count + 1
     }
   end
