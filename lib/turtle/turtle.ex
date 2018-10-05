@@ -31,7 +31,8 @@ defmodule Processor.Turtle do
         velocity: Enum.random(0..100) / 20.0,
         x: Enum.random(0..800),
         y: Enum.random(0..800),
-        color: Enum.random(@colors)
+        color: Enum.random(@colors),
+        tick: 0
       }
     }
   end
@@ -39,8 +40,11 @@ defmodule Processor.Turtle do
   def handle_cast(:update, state) do
     new_state =
       state
-      |> right(Enum.random(-100..100) / state.angle)
+      |> right(Enum.random(-50..50) / state.angle)
       |> forward
+      |> tick
+      |> reverse
+      |> colorize
 
     {:noreply, new_state}
   end
@@ -53,11 +57,16 @@ defmodule Processor.Turtle do
         &triangle(&1, @tri,
           translate: {state.x, state.y},
           rotate: state.heading,
-          fill: {:color, state.color}
+          fill: {:color, state.color},
+          scale: tick_scale(state)
         )
       )
 
     {:reply, g, state}
+  end
+
+  def tick(state) do
+    %{state | tick: state.tick + 1}
   end
 
   def right(state, angle) do
@@ -85,4 +94,30 @@ defmodule Processor.Turtle do
   def bound(coord) when coord > 800.0, do: coord - 800.0
   def bound(coord) when coord < 0.0, do: coord + 800.0
   def bound(coord), do: coord
+
+  # def calculators(state) do
+  # end
+
+  # def apply_calcs(state) do
+  # end
+
+  def tick_scale(state) do
+    :math.sin(state.tick / 20.0) + 1.5
+  end
+
+  def reverse(state) do
+    if :rand.uniform() < 0.01 do
+      %{state | velocity: state.velocity * -1.0}
+    else
+      state
+    end
+  end
+
+  def colorize(state) do
+    if :rand.uniform() < 0.1 do
+      %{state | color: Enum.random(@colors)}
+    else
+      state
+    end
+  end
 end
