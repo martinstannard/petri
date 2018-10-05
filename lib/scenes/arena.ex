@@ -2,34 +2,17 @@ defmodule Processor.Scene.Arena do
   use Scenic.Scene
 
   alias Scenic.Graph
-  alias Scenic.ViewPort
 
   import Scenic.Primitives
-  import Scenic.Components
 
   alias Processor.Component.Nav
-  alias Processor.Component.Notes
+  alias Processor.Component.ArenaUI
   alias Processor.Turtle
-
-  @notes """
-  \"Arena\" turtles
-  """
 
   @animate_ms 16
   @tri {{0, -20}, {10, 10}, {-10, 10}}
 
   @graph Graph.build(font: :roboto, font_size: 24)
-         |> group(fn g ->
-           g
-           |> text("Turtles: ", id: :population, translate: {20, 750})
-           |> button("+1", id: :btn_one, theme: :primary, translate: {600, 750})
-           |> button("+10", id: :btn_ten, theme: :primary, translate: {700, 750})
-
-           # Nav and Notes are added last so that they draw on top
-           |> Nav.add_to_graph(__MODULE__)
-
-           # |> Notes.add_to_graph(@notes)
-         end)
 
   def init(data, opts) do
     viewport = opts[:viewport]
@@ -39,13 +22,12 @@ defmodule Processor.Scene.Arena do
       |> push_graph()
 
     # start a very simple animation timer
-    {:ok, timer} = :timer.send_interval(@animate_ms, :animate)
+    {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
     state = %{
       viewport: viewport,
       graph: graph,
-      count: 0,
-      timer: timer
+      count: 0
     }
 
     new_state = hatch_n(state, 1)
@@ -54,8 +36,9 @@ defmodule Processor.Scene.Arena do
   end
 
   def handle_info(:animate, state) do
-    update(state)
-    draw(state)
+    state
+    |> update
+    |> draw
 
     {:noreply, state}
   end
@@ -63,18 +46,21 @@ defmodule Processor.Scene.Arena do
   def update(state) do
     turtles
     |> Enum.each(&Turtle.update(&1))
+
+    state
   end
 
   def draw(state) do
     turtles
     |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
+    |> Nav.add_to_graph(__MODULE__)
+    |> ArenaUI.add_to_graph(__MODULE__)
     |> Graph.modify(:population, &text(&1, "Population: #{state.count}"))
     |> push_graph
   end
 
   def hatch(state) do
-    {:ok, turtle} =
-      DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, "turtle_#{state.count}"})
+    DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, "turtle_#{state.count}"})
 
     new_state = %{
       state
