@@ -3,6 +3,11 @@ defmodule Processor.Turtle do
 
   alias Scenic.Graph
 
+  alias Processor.Turtle.Behaviour.{
+    Colorize,
+    Scale
+  }
+
   import Scenic.Primitives
 
   @tri {{0, -20}, {10, 10}, {-10, 10}}
@@ -21,29 +26,37 @@ defmodule Processor.Turtle do
   end
 
   def init(id) do
+    state = %{
+      id: id,
+      heading: Enum.random(0..628) / 100.0,
+      angle: Enum.random(200..800),
+      velocity: Enum.random(0..100) / 20.0,
+      x: Enum.random(0..800),
+      y: Enum.random(0..800),
+      color: Enum.random(@colors),
+      tick: 0
+    }
+
+    new_state =
+      state
+      |> Colorize.init()
+      |> Scale.init()
+
     {
       :ok,
-      %{
-        id: id,
-        heading: Enum.random(0..628) / 100.0,
-        angle: Enum.random(200..800),
-        velocity: Enum.random(0..100) / 20.0,
-        x: Enum.random(0..800),
-        y: Enum.random(0..800),
-        color: Enum.random(@colors),
-        tick: 0
-      }
+      new_state
     }
   end
 
   def handle_cast(:update, state) do
     new_state =
       state
+      |> tick
       |> right(Enum.random(-50..50) / state.angle)
       |> forward
-      |> tick
       |> reverse
-      |> colorize
+      |> Colorize.call()
+      |> Scale.call()
 
     {:noreply, new_state}
   end
@@ -57,7 +70,7 @@ defmodule Processor.Turtle do
           translate: {state.x, state.y},
           rotate: state.heading,
           fill: {:color, state.color},
-          scale: tick_scale(state)
+          scale: state.scale
         )
       )
 
@@ -100,10 +113,6 @@ defmodule Processor.Turtle do
   # def apply_calcs(state) do
   # end
 
-  def tick_scale(state) do
-    :math.sin(state.tick / 20.0) + 1.5
-  end
-
   def reverse(state) do
     if :rand.uniform() < 0.01 do
       %{state | velocity: state.velocity * -1.0}
@@ -113,7 +122,7 @@ defmodule Processor.Turtle do
   end
 
   def colorize(state) do
-    if :rand.uniform() < 0.1 do
+    if :rand.uniform() < 0.01 do
       %{state | color: Enum.random(@colors)}
     else
       state
