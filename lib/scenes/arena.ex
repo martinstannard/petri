@@ -8,6 +8,7 @@ defmodule Processor.Scene.Arena do
   alias Processor.Component.Nav
   alias Processor.Component.ArenaUI
   alias Processor.Turtle
+  alias Processor.Process
 
   @animate_ms 16
   @tri {{0, -20}, {10, 10}, {-10, 10}}
@@ -22,7 +23,7 @@ defmodule Processor.Scene.Arena do
       |> push_graph()
 
     # start a very simple animation timer
-    {:ok, _} = :timer.send_interval(@animate_ms, :animate)
+    # {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
     state = %{
       viewport: viewport,
@@ -45,28 +46,35 @@ defmodule Processor.Scene.Arena do
 
   def update(state) do
     turtles
-    |> Enum.each(&Turtle.update(&1))
+    |> Enum.each(&Process.update(&1))
 
     state
   end
 
   def draw(state) do
-    turtles
-    |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
-    |> Nav.add_to_graph(__MODULE__)
-    |> ArenaUI.add_to_graph(__MODULE__)
-    |> Graph.modify(:population, &text(&1, "Population: #{state.count}"))
-    |> push_graph
+    graph =
+      turtles
+      |> Enum.reduce(state.graph, &Process.draw(&1, &2))
+      |> Nav.add_to_graph(__MODULE__)
+      |> ArenaUI.add_to_graph(__MODULE__)
+      |> push_graph
+
+    %{
+      state
+      | graph: graph
+    }
   end
 
   def hatch(state) do
-    DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, "turtle_#{state.count}"})
+    {:ok, process} = DynamicSupervisor.start_child(TurtleSupervisor, {Process, state.count})
 
     new_state = %{
       state
-      | graph: add_turtle(state),
+      | graph: Process.add_to_graph(process, state.graph),
         count: state.count + 1
     }
+
+    draw(new_state)
   end
 
   def hatch_n(state, count) do
@@ -74,11 +82,6 @@ defmodule Processor.Scene.Arena do
     |> Enum.reduce(state, fn _i, s ->
       hatch(s)
     end)
-  end
-
-  def add_turtle(%{graph: graph, count: count}) do
-    graph
-    |> triangle(@tri, id: "turtle_#{count}")
   end
 
   def filter_event({:click, :btn_one}, _, state) do
