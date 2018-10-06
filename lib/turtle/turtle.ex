@@ -3,6 +3,8 @@ defmodule Processor.Turtle do
 
   alias Scenic.Graph
 
+  alias Processor.Turtle.Utils
+
   alias Processor.Turtle.Behaviour.{
     Colorize,
     Scale
@@ -11,8 +13,6 @@ defmodule Processor.Turtle do
   import Scenic.Primitives
 
   @tri {{0, -20}, {10, 10}, {-10, 10}}
-  @colors ~w(alice_blue antique_white aqua aquamarine azure beige bisque black blanched_almond blue blue_violet brown burly_wood cadet_blue chartreuse chocolate coral cornflower_blue cornsilk crimson cyan dark_blue dark_cyan dark_golden_rod dark_gray dark_grey dark_green dark_khaki dark_magenta dark_olive_green dark_orange dark_orchid dark_red dark_salmon dark_sea_green dark_slate_blue dark_slate_gray dark_slate_grey dark_turquoise dark_violet deep_pink deep_sky_blue dim_gray dim_grey dodger_blue fire_brick floral_white forest_green fuchsia gainsboro ghost_white gold golden_rod gray grey green green_yellow honey_dew hot_pink indian_red indigo ivory khaki lavender lavender_blush lawn_green lemon_chiffon light_blue light_coral light_cyan light_golden_rod_yellow light_gray light_grey light_green light_pink light_salmon light_sea_green light_sky_blue light_slate_gray light_slate_grey light_steel_blue light_yellow lime lime_green linen magenta maroon medium_aqua_marine medium_blue medium_orchid medium_purple medium_sea_green medium_slate_blue medium_spring_green medium_turquoise medium_violet_red midnight_blue mint_cream misty_rose moccasin navajo_white navy old_lace olive olive_drab orange orange_red orchid pale_golden_rod pale_green pale_turquoise pale_violet_red papaya_whip peach_puff peru pink plum powder_blue purple rebecca_purple red rosy_brown royal_blue saddle_brown salmon sandy_brown sea_green sea_shell sienna silver sky_blue slate_blue slate_gray slate_grey snow spring_green steel_blue tan teal thistle tomato turquoise violet wheat white white_smoke yellow yellow_green)a
-
   def start_link(id) do
     GenServer.start_link(__MODULE__, id)
   end
@@ -25,6 +25,10 @@ defmodule Processor.Turtle do
     GenServer.call(pid, {:draw, graph})
   end
 
+  def add_to_graph(pid, graph) do
+    GenServer.call(pid, {:add_to_graph, graph})
+  end
+
   def init(id) do
     state = %{
       id: id,
@@ -33,18 +37,19 @@ defmodule Processor.Turtle do
       velocity: Enum.random(0..100) / 20.0,
       x: Enum.random(0..800),
       y: Enum.random(0..800),
-      color: Enum.random(@colors),
+      color: Utils.random_color(),
+      scale: 1.0,
       tick: 0
     }
 
-    new_state =
-      state
-      |> Colorize.init()
-      |> Scale.init()
+    # new_state =
+    #   state
+    #   |> Colorize.init()
+    #   |> Scale.init()
 
     {
       :ok,
-      new_state
+      state
     }
   end
 
@@ -52,29 +57,22 @@ defmodule Processor.Turtle do
     new_state =
       state
       |> tick
-      |> right(Enum.random(-50..50) / state.angle)
+      |> right(Enum.random(0..50) / state.angle)
       |> forward
-      |> reverse
-      |> Colorize.call()
-      |> Scale.call()
+
+    # |> reverse
+    # |> Colorize.call()
+    # |> Scale.call()
 
     {:noreply, new_state}
   end
 
   def handle_call({:draw, graph}, _, state) do
-    g =
-      graph
-      |> Graph.modify(
-        state.id,
-        &triangle(&1, @tri,
-          translate: {state.x, state.y},
-          rotate: state.heading,
-          fill: {:color, state.color},
-          scale: state.scale
-        )
-      )
+    {:reply, paint(graph, state), state}
+  end
 
-    {:reply, g, state}
+  def handle_call({:add_to_graph, graph}, _, state) do
+    {:reply, add(graph, state), state}
   end
 
   def tick(state) do
@@ -107,12 +105,6 @@ defmodule Processor.Turtle do
   def bound(coord) when coord < 0.0, do: coord + 800.0
   def bound(coord), do: coord
 
-  # def calculators(state) do
-  # end
-
-  # def apply_calcs(state) do
-  # end
-
   def reverse(state) do
     if :rand.uniform() < 0.01 do
       %{state | velocity: state.velocity * -1.0}
@@ -123,9 +115,27 @@ defmodule Processor.Turtle do
 
   def colorize(state) do
     if :rand.uniform() < 0.01 do
-      %{state | color: Enum.random(@colors)}
+      %{state | color: Utils.random_color()}
     else
       state
     end
+  end
+
+  defp add(graph, state) do
+    graph
+    |> triangle(@tri, id: state.id)
+  end
+
+  defp paint(graph, state) do
+    graph
+    |> Graph.modify(
+      state.id,
+      &triangle(&1, @tri,
+        translate: {state.x, state.y},
+        rotate: state.heading,
+        fill: {:color, state.color},
+        scale: state.scale
+      )
+    )
   end
 end

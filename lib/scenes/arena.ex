@@ -23,7 +23,7 @@ defmodule Processor.Scene.Arena do
       |> push_graph()
 
     # start a very simple animation timer
-    # {:ok, _} = :timer.send_interval(@animate_ms, :animate)
+    {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
     state = %{
       viewport: viewport,
@@ -66,11 +66,11 @@ defmodule Processor.Scene.Arena do
   end
 
   def hatch(state) do
-    {:ok, process} = DynamicSupervisor.start_child(TurtleSupervisor, {Process, state.count})
+    {:ok, process} = DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, state.count})
 
     new_state = %{
       state
-      | graph: Process.add_to_graph(process, state.graph),
+      | graph: Turtle.add_to_graph(process, state.graph),
         count: state.count + 1
     }
 

@@ -25,17 +25,15 @@ defmodule Processor.Process do
   end
 
   def init(count) do
-    state = %{
-      id: "process_#{count}",
-      x: 30 + rem(count, 20) * 65,
-      y: 130 + div(count, 20) * 65,
-      color: :green,
-      tick: 0
-    }
-
     {
       :ok,
-      state
+      %{
+        id: "process_#{count}",
+        x: 30 + rem(count, 20) * 65,
+        y: 130 + div(count, 20) * 65,
+        color: :green,
+        tick: 0
+      }
     }
   end
 
