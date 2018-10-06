@@ -25,13 +25,10 @@ defmodule Processor.Process do
   end
 
   def init(count) do
-    IO.inspect(div(count, 20))
-    IO.inspect(rem(count, 20))
-
     state = %{
       id: "process_#{count}",
-      x: div(count, 20) * 35,
-      y: rem(count, 20) * 35,
+      x: 30 + rem(count, 20) * 65,
+      y: 130 + div(count, 20) * 65,
       color: :green,
       tick: 0
     }
