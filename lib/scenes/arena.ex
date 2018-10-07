@@ -44,11 +44,16 @@ defmodule Processor.Scene.Arena do
   end
 
   def handle_info(:animate, state) do
-    state
-    |> update
-    |> draw
+    # {ms, new_state} = :timer.tc(&update/1, [state])
+    # IO.inspect(ms, label: "UPDATE:")
+    # {ms, newer_state} = :timer.tc(&draw/1, [new_state])
+    # IO.inspect(ms, label: "DRAW:")
+    new_state =
+      state
+      |> update
+      |> draw
 
-    {:noreply, state}
+    {:noreply, new_state}
   end
 
   def filter_event({:click, :btn_one}, _, state) do
@@ -67,7 +72,10 @@ defmodule Processor.Scene.Arena do
     turtles
     |> Enum.each(&Turtle.update(&1, state))
 
-    state
+    %{
+      state
+      | graph: reap(state.graph)
+    }
   end
 
   def draw(state) do
@@ -101,28 +109,38 @@ defmodule Processor.Scene.Arena do
     end)
   end
 
-  def turtles do
-    TurtleSupervisor
-    |> DynamicSupervisor.which_children()
-    |> Enum.map(fn t ->
-      {_, pid, _, _} = t
-      pid
+  def reap(graph) do
+    turtles
+    |> Enum.reduce(graph, fn t, g ->
+      t
+      |> terminate(g, Turtle.health(t))
     end)
   end
 
-  def add_food(graph, %{food_x: x, food_y: y}) do
-    graph
-    |> circle(10, id: :food, t: {x, y}, fill: {:color, :green})
+  def terminate(turtle, graph, health) when health < 1 do
+    g =
+      graph
+      |> Graph.delete(Turtle.id(turtle))
+
+    DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
+    g
   end
 
-  def food_coords do
+  def terminate(_, graph, _), do: graph
+
+  defp add_food(graph, %{food_x: x, food_y: y}) do
+    graph
+    |> circle(10, id: :food, t: {x, y}, fill: {:color, :yellow})
+  end
+
+  defp food_coords do
     %{
       food_x: Enum.random(100..700),
       food_y: Enum.random(100..700)
     }
   end
 
-  def move_food(state) do
+  defp move_food(state) do
     coords = food_coords
 
     g =
@@ -140,5 +158,20 @@ defmodule Processor.Scene.Arena do
         food_x: coords.food_x,
         food_y: coords.food_y
     }
+  end
+
+  def turtles do
+    TurtleSupervisor
+    |> DynamicSupervisor.which_children()
+    |> Enum.map(fn t ->
+      {_, pid, _, _} = t
+      pid
+    end)
+  end
+
+  def turtle_count do
+    TurtleSupervisor
+    |> DynamicSupervisor.which_children()
+    |> length
   end
 end

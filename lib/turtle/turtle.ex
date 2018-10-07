@@ -13,7 +13,9 @@ defmodule Processor.Turtle do
 
   import Scenic.Primitives
 
+  @max_health 2500
   @tri {{0, -20}, {10, 10}, {-10, 10}}
+
   def start_link(id) do
     GenServer.start_link(__MODULE__, id)
   end
@@ -30,24 +32,33 @@ defmodule Processor.Turtle do
     GenServer.call(pid, {:add_to_graph, graph})
   end
 
+  def health(pid) do
+    GenServer.call(pid, :health)
+  end
+
+  def id(pid) do
+    GenServer.call(pid, :id)
+  end
+
   def init(id) do
     state = %{
       id: id,
       heading: Enum.random(0..628) / 100.0,
-      angle: Enum.random(20..250) / 1000.0,
-      velocity: Enum.random(0..100) / 20.0,
+      angle: Enum.random(20..100) / 1000.0,
+      velocity: Enum.random(5..100) / 20.0,
       x: Enum.random(0..800),
       y: Enum.random(0..800),
       color: Utils.random_color(),
       scale: Enum.random(0..2000) / 1000.0 + 1.0,
+      health: @max_health,
       tick: 0
     }
+
+    IO.inspect(id, label: :ID)
 
     new_state =
       state
       |> Smell.init()
-
-    #   |> Scale.init()
 
     {
       :ok,
@@ -59,14 +70,8 @@ defmodule Processor.Turtle do
     new_state =
       state
       |> tick
-      # |> right(Enum.random(0..50) / state.angle)
-      # |> forward
       |> Smell.call(world)
       |> move()
-
-    # |> reverse
-    # |> Colorize.call()
-    # |> Scale.call()
 
     {:noreply, new_state}
   end
@@ -79,6 +84,14 @@ defmodule Processor.Turtle do
     {:reply, add(graph, state), state}
   end
 
+  def handle_call(:health, _, state) do
+    {:reply, state.health, state}
+  end
+
+  def handle_call(:id, _, state) do
+    {:reply, state.id, state}
+  end
+
   defp paint(graph, state) do
     graph
     |> Graph.modify(
@@ -87,7 +100,7 @@ defmodule Processor.Turtle do
         translate: {state.x, state.y},
         rotate: state.heading,
         # scale: state.scale,
-        fill: {:color, state.color}
+        fill: {:color, health_colour(state.health)}
       )
     )
   end
@@ -97,8 +110,12 @@ defmodule Processor.Turtle do
     |> triangle(@tri, id: state.id)
   end
 
+  # def tick(%{health: 0}) do
+  #   DynamicSupervisor.terminate_child(TurtleSupervisor, self)
+  # end
+
   def tick(state) do
-    %{state | tick: state.tick + 1}
+    %{state | tick: state.tick + 1, health: state.health - 1}
   end
 
   def move(state) do
@@ -140,4 +157,11 @@ defmodule Processor.Turtle do
   defp bound(coord) when coord > 800.0, do: coord - 800.0
   defp bound(coord) when coord < 0.0, do: coord + 800.0
   defp bound(coord), do: coord
+
+  defp health_colour(health) do
+    percentage = health / @max_health
+    r = round(255.0 * (1.0 - percentage))
+    g = round(255.0 * percentage)
+    {r, g, 0x22}
+  end
 end
