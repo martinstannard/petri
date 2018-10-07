@@ -25,7 +25,12 @@ defmodule Processor.Component.ArenaUI do
 
     graph =
       Graph.build(font_size: @font_size, translate: {0, vp_height - @height})
-      |> text("Turtles: ", id: :population, translate: {@indent, @font_size * 2})
+      # |> text("Turtles: ", id: :population, translate: {@indent, @font_size * 2})
+      |> button("move",
+        id: :move_food,
+        theme: :primary,
+        translate: {vp_width - 300, @font_size * 2}
+      )
       |> button("+1",
         id: :btn_one,
         theme: :primary,
