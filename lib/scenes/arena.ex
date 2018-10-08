@@ -10,9 +10,20 @@ defmodule Processor.Scene.Arena do
   alias Processor.Turtle
   alias Processor.Process
 
+  alias Processor.Arena.{
+    Birth,
+    Food,
+    Reaper
+  }
+
   @animate_ms 16
 
   @graph Graph.build(font: :roboto, font_size: 24)
+         |> text("0",
+           id: :population,
+           translate: {20, 700},
+           font_size: 64
+         )
 
   def init(_, opts) do
     viewport = opts[:viewport]
@@ -21,7 +32,7 @@ defmodule Processor.Scene.Arena do
       @graph
       |> Nav.add_to_graph(__MODULE__)
       |> ArenaUI.add_to_graph(__MODULE__)
-      |> add_food(food_coords())
+      |> Food.add_food()
       |> push_graph()
 
     # start a very simple animation timer
@@ -35,12 +46,7 @@ defmodule Processor.Scene.Arena do
       food_y: 0
     }
 
-    new_state =
-      state
-      |> hatch_n(1)
-      |> move_food
-
-    {:ok, new_state}
+    {:ok, state}
   end
 
   def handle_info(:animate, state) do
@@ -57,25 +63,26 @@ defmodule Processor.Scene.Arena do
   end
 
   def filter_event({:click, :btn_one}, _, state) do
-    {:stop, hatch_n(state, 1)}
+    {:stop, Birth.hatch_n(state, 1)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, hatch_n(state, 10)}
+    {:stop, Birth.hatch_n(state, 10)}
   end
 
   def filter_event({:click, :move_food}, _, state) do
-    {:stop, move_food(state)}
+    {:stop, Food.move_food(state)}
   end
 
   def update(state) do
     turtles
     |> Enum.each(&Turtle.update(&1, state))
 
-    %{
-      state
-      | graph: reap(state.graph)
-    }
+    state
+    |> Reaper.call(turtles)
+    |> Birth.call()
+    |> Food.call()
+    |> population
   end
 
   def draw(state) do
@@ -87,76 +94,6 @@ defmodule Processor.Scene.Arena do
     %{
       state
       | graph: graph
-    }
-  end
-
-  def hatch(state) do
-    {:ok, process} = DynamicSupervisor.start_child(TurtleSupervisor, {Turtle, state.count})
-
-    new_state = %{
-      state
-      | graph: Turtle.add_to_graph(process, state.graph),
-        count: state.count + 1
-    }
-
-    draw(new_state)
-  end
-
-  def hatch_n(state, count) do
-    1..count
-    |> Enum.reduce(state, fn _i, s ->
-      hatch(s)
-    end)
-  end
-
-  def reap(graph) do
-    turtles
-    |> Enum.reduce(graph, fn t, g ->
-      t
-      |> terminate(g, Turtle.health(t))
-    end)
-  end
-
-  def terminate(turtle, graph, health) when health < 1 do
-    g =
-      graph
-      |> Graph.delete(Turtle.id(turtle))
-
-    DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
-    g
-  end
-
-  def terminate(_, graph, _), do: graph
-
-  defp add_food(graph, %{food_x: x, food_y: y}) do
-    graph
-    |> circle(10, id: :food, t: {x, y}, fill: {:color, :yellow})
-  end
-
-  defp food_coords do
-    %{
-      food_x: Enum.random(100..700),
-      food_y: Enum.random(100..700)
-    }
-  end
-
-  defp move_food(state) do
-    coords = food_coords
-
-    g =
-      state.graph
-      |> Graph.modify(
-        :food,
-        &update_opts(&1,
-          translate: {coords.food_x, coords.food_y}
-        )
-      )
-
-    %{
-      state
-      | graph: g,
-        food_x: coords.food_x,
-        food_y: coords.food_y
     }
   end
 
