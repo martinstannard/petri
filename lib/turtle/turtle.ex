@@ -13,7 +13,7 @@ defmodule Processor.Turtle do
 
   import Scenic.Primitives
 
-  @max_health 2500
+  @max_health 1000
   @tri {{0, -20}, {10, 10}, {-10, 10}}
 
   def start_link(id) do
@@ -53,8 +53,6 @@ defmodule Processor.Turtle do
       health: @max_health,
       tick: 0
     }
-
-    IO.inspect(id, label: :ID)
 
     new_state =
       state
@@ -110,10 +108,6 @@ defmodule Processor.Turtle do
     |> triangle(@tri, id: state.id)
   end
 
-  # def tick(%{health: 0}) do
-  #   DynamicSupervisor.terminate_child(TurtleSupervisor, self)
-  # end
-
   def tick(state) do
     %{state | tick: state.tick + 1, health: state.health - 1}
   end
@@ -122,6 +116,7 @@ defmodule Processor.Turtle do
     state
     |> forward
     |> turn
+    |> feed
   end
 
   def turn(%{food_delta: fd} = state) when fd < 0 do
@@ -131,6 +126,15 @@ defmodule Processor.Turtle do
   def turn(state) do
     right(state, state.angle)
   end
+
+  def feed(%{food_distance: fd} = state) when fd < 20000.0 do
+    %{
+      state
+      | health: min(state.health + (20000.0 - fd) / 4000.0, @max_health)
+    }
+  end
+
+  def feed(state), do: state
 
   def right(state, angle) do
     %{state | heading: state.heading - angle}
