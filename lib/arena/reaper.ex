@@ -1,6 +1,6 @@
 defmodule Processor.Arena.Reaper do
   alias Scenic.Graph
-  alias Processor.Turtle
+  alias Processor.Turtles.Turtle
 
   @moduledoc """
   remove dead turtles

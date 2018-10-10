@@ -1,4 +1,4 @@
-defmodule Processor.Turtle.Behaviour.Colorize do
+defmodule Processor.Turtles.Behaviour.Colorize do
   @moduledoc """
   changes a turtle's color
   """

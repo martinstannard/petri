@@ -1,4 +1,4 @@
-defmodule Processor.Turtle.Behaviour.Scale do
+defmodule Processor.Turtles.Behaviour.Scale do
   @moduledoc """
   scales a turtle based on tick and some state
   """

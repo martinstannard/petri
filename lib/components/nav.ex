@@ -36,6 +36,8 @@ defmodule Processor.Component.Nav do
            {"Primitives", Processor.Scene.Primitives},
            {"Components", Processor.Scene.Components},
            {"Transforms", Processor.Scene.Transforms},
+           {"Processes", Processor.Scene.Processes},
+           {"Walking", Processor.Scene.Walking},
            {"Smellatorium", Processor.Scene.Arena}
          ], current_scene},
         id: :nav,
