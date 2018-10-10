@@ -6,7 +6,7 @@ defmodule Processor.Arena.Food do
   food/light behaviour
   """
   def call(state) do
-    if :rand.uniform() < 0.001 do
+    if :rand.uniform() < 0.002 do
       move_food(state)
     else
       state

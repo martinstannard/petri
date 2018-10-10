@@ -9,7 +9,8 @@ defmodule Processor.Turtles.Turtle do
     Colorize,
     Feed,
     Scale,
-    Smell
+    Smell,
+    Wiggle
   }
 
   import Scenic.Primitives
@@ -72,6 +73,7 @@ defmodule Processor.Turtles.Turtle do
       |> tick
       |> Smell.call(world)
       |> Feed.call()
+      |> Wiggle.call()
       |> move()
 
     {:noreply, new_state}

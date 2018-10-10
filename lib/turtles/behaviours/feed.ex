@@ -11,7 +11,7 @@ defmodule Processor.Turtles.Behaviour.Feed do
   def call(%{food_distance: fd} = state) when fd < 20_000.0 do
     %{
       state
-      | health: min(state.health + (20_000.0 - fd) / 4_000.0, state.max_health)
+      | health: min(state.health + (20_000.0 - fd) / 8_000.0, state.max_health)
     }
   end
 
