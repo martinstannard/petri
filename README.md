@@ -2,7 +2,7 @@
 
 Some experimentation using Scenic to visualise Elixir Processes
 
-![Screencast](https://imgur.com/Ax3cMkr)
+![Screencast](https://imgur.com/2nQYcth)
 
 ## Prerequisites
 
