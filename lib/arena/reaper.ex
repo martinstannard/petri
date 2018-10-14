@@ -5,12 +5,12 @@ defmodule Processor.Arena.Reaper do
   @moduledoc """
   remove dead turtles
   """
-  def call(state, turtles) do
+  def call(state, pids) do
     graph =
-      turtles
-      |> Enum.reduce(state.graph, fn t, g ->
-        t
-        |> terminate(g, Turtle.health(t))
+      pids
+      |> Enum.reduce(state.graph, fn pid, g ->
+        pid
+        |> terminate(state, state.creature.health(pid))
       end)
 
     %{

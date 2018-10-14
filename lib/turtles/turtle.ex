@@ -102,7 +102,6 @@ defmodule Processor.Turtles.Turtle do
       &update_opts(&1,
         translate: {state.x, state.y},
         rotate: state.heading,
-        # scale: state.scale,
         fill: {:color, health_colour(state.health)}
       )
     )

@@ -98,7 +98,7 @@ defmodule Processor.Scene.Arena do
   def population(state) do
     g =
       state.graph
-      |> Graph.modify(:population, &text(&1, "#{turtle_count}"))
+      |> Graph.modify(:population, &text(&1, "#{turtle_count()}"))
 
     %{state | graph: g}
   end
