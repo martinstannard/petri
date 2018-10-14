@@ -5,21 +5,16 @@ defmodule Processor.Scene.Processes do
 
   import Scenic.Primitives
 
-  alias Processor.Component.{ArenaUI, Nav}
+  alias Processor.Component.{ProcessorUI, Nav}
 
   alias Processor.Turtles.{
-    Process,
+    Messenger,
     Supervisor
   }
 
-  alias Processor.Arena.{
-    Birth,
-    Food,
-    Reaper
-  }
+  alias Processor.Arena.Birth
 
   @animate_ms 16
-
   @graph Graph.build(font: :roboto, font_size: 24)
 
   def init(_, opts) do
@@ -29,62 +24,94 @@ defmodule Processor.Scene.Processes do
     graph =
       @graph
       |> Nav.add_to_graph(__MODULE__)
-      |> ArenaUI.add_to_graph(__MODULE__)
+      |> ProcessorUI.add_to_graph(__MODULE__)
       |> push_graph()
 
-    # start a very simple animation timer
-    {:ok, _} = :timer.send_interval(@animate_ms, :animate)
+    # start a very simple timer
+    {:ok, _} = :timer.send_interval(@animate_ms, :tick)
 
     state = %{
       viewport: viewport,
       graph: graph,
-      count: 0
+      count: 0,
+      last_frame_time: Time.utc_now()
     }
 
     {:ok, state}
   end
 
-  def handle_info(:animate, state) do
-    new_state =
-      state
-      |> update
-      |> draw
+  def handle_info(:tick, state) do
+    {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
+    elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
+    IO.puts("messages #{len} time #{elapsed}")
 
-    {:noreply, new_state}
+    if :rand.uniform() < 0.01 do
+      send_ping(20)
+    end
+
+    if len > 10 do
+      {:noreply, state}
+    else
+      {:noreply, draw(%{state | last_frame_time: Time.utc_now()})}
+    end
+  end
+
+  def handle_info(_, state) do
+    {:noreply, state}
   end
 
   def filter_event({:click, :btn_one}, _, state) do
-    {:stop, Birth.hatch_n(state, 1, Process)}
+    {:stop, add_processes(1, state)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, Birth.hatch_n(state, 10, Process)}
+    {:stop, add_processes(10, state)}
+  end
+
+  def filter_event({:click, :ping}, _, state) do
+    send_ping(0)
+    {:stop, state}
+  end
+
+  def filter_event({:click, :multiping}, _, state) do
+    send_ping(20)
+    {:stop, state}
   end
 
   def filter_event({:click, id}, _, state) when is_pid(id) do
     pid = to_string(:erlang.pid_to_list(id))
-    IO.inspect("filter_event #{pid}")
     DynamicSupervisor.terminate_child(TurtleSupervisor, id)
     new_state = %{state | graph: Graph.delete(state.graph, id)}
-    {:stop, new_state}
+
+    {:stop, draw(new_state)}
   end
 
-  def update(state) do
-    Supervisor.children()
-    |> Enum.each(&Process.update(&1, state))
-
+  def add_processes(count, state) do
     state
+    |> Birth.hatch_n(count, Messenger)
+
+    # |> draw
   end
 
   def draw(state) do
+    # state
     graph =
       Supervisor.children()
-      |> Enum.reduce(state.graph, &Process.draw(&1, &2))
+      |> Enum.reduce(state.graph, &Messenger.draw(&1, &2))
       |> push_graph
 
-    %{
-      state
-      | graph: graph
-    }
+    %{state | graph: graph}
+  end
+
+  def send_ping(count) do
+    g =
+      Supervisor.random_child()
+      |> pinger(count)
+  end
+
+  def pinger(nil, _), do: nil
+
+  def pinger(child, count) do
+    child |> Messenger.ping(count)
   end
 end
