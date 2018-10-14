@@ -10,6 +10,7 @@ defmodule Processor.Turtles.Turtle do
     Feed,
     Scale,
     Smell,
+    Vision,
     Wiggle
   }
 
@@ -42,10 +43,15 @@ defmodule Processor.Turtles.Turtle do
     GenServer.call(pid, :id)
   end
 
+  def state(pid) do
+    GenServer.call(pid, :state)
+  end
+
   def init(id) do
     state = %{
       id: id,
-      heading: Enum.random(0..628) / 100.0,
+      # heading: Enum.random(0..628) / 100.0,
+      heading: 0.0,
       angle: Enum.random(20..100) / 1000.0 * Enum.random([-1.0, 1.0]),
       velocity: Enum.random(5..100) / 20.0,
       x: Enum.random(0..800),
@@ -58,7 +64,7 @@ defmodule Processor.Turtles.Turtle do
 
     new_state =
       state
-      |> Smell.init()
+      |> Vision.init()
       |> Feed.init(@max_health)
 
     {
@@ -71,9 +77,9 @@ defmodule Processor.Turtles.Turtle do
     new_state =
       state
       |> tick
-      |> Smell.call(world)
+      |> Vision.call(world)
+      # |> Wiggle.call()
       |> Feed.call()
-      |> Wiggle.call()
       |> move()
 
     {:noreply, new_state}
@@ -93,6 +99,10 @@ defmodule Processor.Turtles.Turtle do
 
   def handle_call(:id, _, state) do
     {:reply, state.id, state}
+  end
+
+  def handle_call(:state, _, state) do
+    {:reply, state, state}
   end
 
   defp paint(graph, state) do
@@ -122,17 +132,31 @@ defmodule Processor.Turtles.Turtle do
     |> turn
   end
 
-  def turn(%{food_delta: fd} = state) when fd < 0 do
-    state
-  end
+  # def turn(state) do
+  #   %{state | heading: state.heading + 2.0 * :math.pi()}
+  #   state
+  #   |> Map.put(:heading, state.heading - state.angle)
+  # end
+
+  # def turn(%{food_delta: fd} = state) when fd < 0 do
+  #   state
+  # end
 
   def turn(state) do
-    right(state, state.angle)
+    state
+    |> Map.put(:heading, state.heading - state.angle)
+    |> clamp_heading
   end
 
-  def right(state, angle) do
-    %{state | heading: state.heading - angle}
+  def clamp_heading(%{heading: heading} = state) when heading > 6.283185307179586 do
+    %{state | heading: state.heading - 2.0 * :math.pi()}
   end
+
+  def clamp_heading(%{heading: heading} = state) when heading < 0 do
+    %{state | heading: state.heading + 2.0 * :math.pi()}
+  end
+
+  def clamp_heading(state), do: state
 
   def forward(state) do
     %{

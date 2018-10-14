@@ -26,19 +26,22 @@ defmodule Processor.Scene.Arena do
       @graph
       |> Nav.add_to_graph(__MODULE__)
       |> ArenaUI.add_to_graph(__MODULE__)
-      |> Food.add_food()
+      |> Food.add()
       |> push_graph()
 
     # start a very simple animation timer
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
-    state = %{
-      viewport: viewport,
-      graph: graph,
-      count: 0,
-      food_x: 0,
-      food_y: 0
-    }
+    state =
+      %{
+        viewport: viewport,
+        graph: graph,
+        count: 0,
+        food_x: 0,
+        food_y: 0
+      }
+      |> Food.init()
+      |> Food.move()
 
     {:ok, state}
   end
@@ -61,23 +64,23 @@ defmodule Processor.Scene.Arena do
   end
 
   def filter_event({:click, :move_food}, _, state) do
-    {:stop, Food.move_food(state)}
+    {:stop, Food.move(state)}
   end
 
   def update(state) do
-    turtles
+    turtles()
     |> Enum.each(&Turtle.update(&1, state))
 
     state
-    |> Reaper.call(turtles)
-    |> Birth.call(Turtle)
+    |> Reaper.call(turtles())
+    # |> Birth.call(Turtle)
     |> Food.call()
     |> population
   end
 
   def draw(state) do
     graph =
-      turtles
+      turtles()
       |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
       |> push_graph
 

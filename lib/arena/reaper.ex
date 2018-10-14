@@ -19,11 +19,11 @@ defmodule Processor.Arena.Reaper do
     }
   end
 
-  defp terminate(turtle, graph, health) when health < 1 do
-    id = Turtle.id(turtle)
-    DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
+  defp terminate(pid, state, health) when health < 1 do
+    id = state.creature.id(pid)
+    DynamicSupervisor.terminate_child(TurtleSupervisor, pid)
 
-    graph
+    state.graph
     |> Graph.delete(id)
   end
 

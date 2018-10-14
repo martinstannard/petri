@@ -20,4 +20,21 @@ defmodule Processor.Turtles.Supervisor do
       DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
     end)
   end
+
+  def apply(func) do
+    children
+    |> Enum.map(&apply(func, [&1]))
+  end
+
+  def random_child do
+    children
+    |> random()
+  end
+
+  defp random([]), do: nil
+
+  defp random(children) do
+    children
+    |> Enum.random()
+  end
 end

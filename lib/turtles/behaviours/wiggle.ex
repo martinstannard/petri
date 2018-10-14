@@ -8,7 +8,7 @@ defmodule Processor.Turtles.Behaviour.Wiggle do
   end
 
   def call(state) do
-    wiggle = state.angle / 2.0 * :rand.uniform() * -1.0
+    wiggle = state.angle / 20.0 * :rand.uniform() * -1.0
 
     %{
       state

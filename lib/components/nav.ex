@@ -38,7 +38,8 @@ defmodule Processor.Component.Nav do
            {"Transforms", Processor.Scene.Transforms},
            {"Processes", Processor.Scene.Processes},
            {"Walking", Processor.Scene.Walking},
-           {"Smellatorium", Processor.Scene.Arena}
+           {"Smellatorium", Processor.Scene.Arena},
+           {"Panopticon", Processor.Scene.Panopticon}
          ], current_scene},
         id: :nav,
         translate: {70, 15}
