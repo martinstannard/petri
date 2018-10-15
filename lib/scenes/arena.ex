@@ -69,7 +69,7 @@ defmodule Processor.Scene.Arena do
   end
 
   def update(state) do
-    turtles()
+    Supervisor.children()
     |> Enum.each(&Turtle.update(&1, state))
 
     state
@@ -81,7 +81,7 @@ defmodule Processor.Scene.Arena do
 
   def draw(state) do
     graph =
-      turtles()
+      Supervisor.children()
       |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
       |> push_graph
 
@@ -91,18 +91,10 @@ defmodule Processor.Scene.Arena do
     }
   end
 
-  def turtles do
-    Supervisor.children()
-  end
-
-  def turtle_count do
-    Supervisor.count()
-  end
-
   def population(state) do
     g =
       state.graph
-      |> Graph.modify(:population, &text(&1, "#{turtle_count()}"))
+      |> Graph.modify(:population, &text(&1, "#{Supervisor.count()}"))
 
     %{state | graph: g}
   end

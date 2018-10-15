@@ -129,6 +129,7 @@ defmodule Processor.Scene.Walking do
       state.graph
       |> Graph.modify(:frames, &text(&1, "#{elapsed} ms"))
       |> Graph.modify(:population, &text(&1, "#{Supervisor.count()}"))
+      |> Graph.modify(:run, &text(&1, run_label(!state)))
 
     %{state | graph: g, last_frame_time: Time.utc_now()}
   end

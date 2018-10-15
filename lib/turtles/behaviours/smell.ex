@@ -10,8 +10,6 @@ defmodule Processor.Turtles.Behaviour.Smell do
   end
 
   def call(state, world) do
-    bearing(world.food_x, world.food_y, state)
-    # IO.inspect(state.heading, label: :heading)
     new_distance = distance_to_food(state, world)
     delta = new_distance - state.food_distance
 
@@ -26,13 +24,5 @@ defmodule Processor.Turtles.Behaviour.Smell do
     a = (food_x - state.x) * (food_x - state.x)
     b = (food_y - state.y) * (food_y - state.y)
     a + b
-  end
-
-  defp bearing(x, y, state) do
-    adjacent = x - state.x
-    opposite = y - state.y
-
-    :math.atan(opposite / adjacent)
-    |> IO.inspect(label: :bearing)
   end
 end

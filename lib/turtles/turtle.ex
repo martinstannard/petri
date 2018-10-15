@@ -6,11 +6,8 @@ defmodule Processor.Turtles.Turtle do
   alias Processor.Turtles.Utils
 
   alias Processor.Turtles.Behaviour.{
-    Colorize,
     Feed,
-    Scale,
     Smell,
-    Vision,
     Wiggle
   }
 
@@ -50,9 +47,8 @@ defmodule Processor.Turtles.Turtle do
   def init(id) do
     state = %{
       id: id,
-      # heading: Enum.random(0..628) / 100.0,
-      heading: 0.0,
-      angle: Enum.random(20..100) / 1000.0 * Enum.random([-1.0, 1.0]),
+      heading: Enum.random(0..628) / 100.0,
+      angle: Enum.random(20..100) / 1000.00 * Enum.random([-1.0, 1.0]),
       velocity: Enum.random(5..100) / 20.0,
       x: Enum.random(0..800),
       y: Enum.random(0..800),
@@ -64,7 +60,7 @@ defmodule Processor.Turtles.Turtle do
 
     new_state =
       state
-      |> Vision.init()
+      |> Smell.init()
       |> Feed.init(@max_health)
 
     {
@@ -77,10 +73,13 @@ defmodule Processor.Turtles.Turtle do
     new_state =
       state
       |> tick
-      |> Vision.call(world)
-      # |> Wiggle.call()
+      |> forward
+      |> Smell.call(world)
+      |> Wiggle.call()
+      |> turn
       |> Feed.call()
-      |> move()
+
+    # |> move()
 
     {:noreply, new_state}
   end
@@ -138,9 +137,9 @@ defmodule Processor.Turtles.Turtle do
   #   |> Map.put(:heading, state.heading - state.angle)
   # end
 
-  # def turn(%{food_delta: fd} = state) when fd < 0 do
-  #   state
-  # end
+  def turn(%{food_delta: fd} = state) when fd < 0 do
+    state
+  end
 
   def turn(state) do
     state
