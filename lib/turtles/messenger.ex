@@ -8,11 +8,9 @@ defmodule Processor.Turtles.Messenger do
   alias Processor.Turtles.Supervisor
 
   import Scenic.Primitives
-  import Scenic.Components
 
   @columns 7
   @off_color :dim_grey
-  @on_color :red
 
   def start_link(count) do
     GenServer.start_link(__MODULE__, count)
@@ -34,18 +32,16 @@ defmodule Processor.Turtles.Messenger do
     {
       :ok,
       %{
-        id: to_string(:erlang.pid_to_list(self)),
-        text_id: to_string(:erlang.pid_to_list(self)) <> "_text",
         x: 30 + rem(count, @columns) * 110,
         y: 80 + div(count, @columns) * 50,
         color: @off_color,
-        tick: 0
+        dirty: false
       }
     }
   end
 
   def handle_call({:draw, graph}, _, state) do
-    {:reply, paint(graph, state), state}
+    {:reply, paint(graph, state), %{state | dirty: false}}
   end
 
   def handle_call({:add_to_graph, graph}, _, state) do
@@ -56,12 +52,12 @@ defmodule Processor.Turtles.Messenger do
     {:noreply, do_ping(count, state)}
   end
 
-  def handle_info(:unping, state) do
-    {:noreply, %{state | color: @off_color}}
-  end
-
   def handle_info({:ping, count}, state) do
     {:noreply, do_ping(count, state)}
+  end
+
+  def handle_info(:unping, state) do
+    {:noreply, %{state | color: @off_color, dirty: true}}
   end
 
   def handle_info(_, state) do
@@ -71,33 +67,33 @@ defmodule Processor.Turtles.Messenger do
   defp do_ping(count, state) do
     send_to_sibling(count)
     Process.send_after(self(), :unping, 500)
-    %{state | color: ping_color(count)}
-  end
-
-  defp tick(state) do
-    %{state | tick: state.tick + 1}
+    %{state | color: ping_color(count), dirty: true}
   end
 
   defp add(graph, state) do
     graph
     |> rrect({100, 40, 6},
-      id: state.id,
+      id: button_id(),
       fill: {:color, @off_color},
-      stroke: {3, :grey},
+      stroke: {4, :grey},
       t: {state.x, state.y}
     )
-    |> text(state.id,
-      id: "#{state.id}_text",
+    |> text(id(),
+      id: text_id(),
       fill: {:color, :white},
-      t: {state.x + 15, state.y + 25},
+      t: {state.x + 10, state.y + 25},
       font_size: 20
     )
   end
 
-  defp paint(graph, state) do
+  defp paint(graph, %{dirty: false}) do
     graph
-    |> Graph.modify(state.id, &update_opts(&1, fill: state.color))
-    |> Graph.modify(state.text_id, &update_opts(&1, fill: :white))
+  end
+
+  defp paint(graph, %{dirty: true} = state) do
+    graph
+    |> Graph.modify(button_id(), &update_opts(&1, fill: state.color))
+    |> Graph.modify(text_id(), &update_opts(&1, fill: :white))
   end
 
   defp send_to_sibling(0), do: nil
@@ -107,14 +103,28 @@ defmodule Processor.Turtles.Messenger do
     |> deliver(count)
   end
 
-  def deliver([], _), do: nil
+  defp deliver([], _), do: nil
 
-  def deliver(sibling, count) do
+  defp deliver(sibling, count) do
     Process.send_after(sibling, {:ping, count - 1}, 50)
   end
 
-  def ping_color(count) do
+  defp ping_color(count) do
     green = round(155.0 + 5.0 * count)
     {0x88, green, 0x33}
+  end
+
+  defp button_id do
+    id() <> "_button"
+  end
+
+  defp text_id do
+    id() <> "_text"
+  end
+
+  defp id do
+    self()
+    |> :erlang.pid_to_list()
+    |> to_string
   end
 end

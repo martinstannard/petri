@@ -1,21 +1,18 @@
 defmodule Processor.Scene.Processes do
   use Scenic.Scene
 
-  alias Scenic.Graph
-
   import Scenic.Primitives
+
+  alias Scenic.Graph
 
   alias Processor.Component.{ProcessorUI, Nav}
 
-  alias Processor.Turtles.{
-    Messenger,
-    Supervisor
-  }
+  alias Processor.Turtles.{Messenger, Supervisor}
 
   alias Processor.Arena.Birth
 
   @animate_ms 16
-  @graph Graph.build(font: :roboto, font_size: 24)
+  @graph Graph.build(font: :roboto, font_size: 14)
 
   def init(_, opts) do
     Supervisor.clear()
@@ -42,11 +39,6 @@ defmodule Processor.Scene.Processes do
   def handle_info(:tick, state) do
     {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
     elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
-    IO.puts("messages #{len} time #{elapsed}")
-
-    if :rand.uniform() < 0.01 do
-      send_ping(20)
-    end
 
     if len > 10 do
       {:noreply, state}
@@ -57,10 +49,6 @@ defmodule Processor.Scene.Processes do
 
   def handle_info(_, state) do
     {:noreply, state}
-  end
-
-  def filter_event({:click, :btn_one}, _, state) do
-    {:stop, add_processes(1, state)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
@@ -79,7 +67,7 @@ defmodule Processor.Scene.Processes do
 
   def filter_event({:click, id}, _, state) when is_pid(id) do
     pid = to_string(:erlang.pid_to_list(id))
-    DynamicSupervisor.terminate_child(TurtleSupervisor, id)
+    Supervisor.terminate(pid)
     new_state = %{state | graph: Graph.delete(state.graph, id)}
 
     {:stop, draw(new_state)}
@@ -101,9 +89,8 @@ defmodule Processor.Scene.Processes do
   end
 
   def send_ping(count) do
-    g =
-      Supervisor.random_child()
-      |> pinger(count)
+    Supervisor.random_child()
+    |> pinger(count)
   end
 
   def pinger(nil, _), do: nil

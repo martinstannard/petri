@@ -28,15 +28,10 @@ defmodule Processor.Component.ProcessorUI do
       |> button("Ping",
         id: :ping,
         theme: :secondary,
-        translate: {vp_width - 400, @font_size * 2}
+        translate: {vp_width - 300, @font_size * 2}
       )
       |> button("Multiping",
         id: :multiping,
-        theme: :secondary,
-        translate: {vp_width - 300, @font_size * 2}
-      )
-      |> button("Add 1",
-        id: :btn_one,
         theme: :secondary,
         translate: {vp_width - 200, @font_size * 2}
       )
