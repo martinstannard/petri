@@ -3,28 +3,29 @@ defmodule Processor.Arena.Birth do
   give birth to new turtles
   """
 
-  def call(state, creature) do
+  def call(state) do
     if :rand.uniform() < 0.01 do
       state
-      |> hatch(creature)
+      |> hatch
     else
       state
     end
   end
 
-  def hatch_n(state, count, creature) do
+  def hatch_n(state, count) do
     1..count
     |> Enum.reduce(state, fn _i, s ->
-      hatch(s, creature)
+      hatch(s)
     end)
   end
 
-  def hatch(state, creature) do
-    {:ok, process} = DynamicSupervisor.start_child(TurtleSupervisor, {creature, state.count})
+  def hatch(state) do
+    {:ok, process} =
+      DynamicSupervisor.start_child(TurtleSupervisor, {state.creature, state.count})
 
-    new_state = %{
+    %{
       state
-      | graph: creature.add_to_graph(process, state.graph),
+      | graph: state.creature.add_to_graph(process, state.graph),
         count: state.count + 1
     }
   end

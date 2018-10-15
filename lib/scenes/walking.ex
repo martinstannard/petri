@@ -32,6 +32,7 @@ defmodule Processor.Scene.Walking do
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
     state = %{
+      creature: Walker,
       viewport: viewport,
       graph: graph,
       count: 0
@@ -50,11 +51,15 @@ defmodule Processor.Scene.Walking do
   end
 
   def filter_event({:click, :btn_one}, _, state) do
-    {:stop, Birth.hatch_n(state, 1, Walker)}
+    {:stop, Birth.hatch_n(state, 1)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, Birth.hatch_n(state, 10, Walker)}
+    {:stop, Birth.hatch_n(state, 10)}
+  end
+
+  def filter_event({:value_changed, :run, run_state}, _, state) do
+    {:stop, %{state | run_state: run_state}}
   end
 
   def update(state) do
@@ -62,7 +67,8 @@ defmodule Processor.Scene.Walking do
     |> Enum.each(&Walker.update(&1, state))
 
     state
-    |> Birth.call(Walker)
+    |> Reaper.call()
+    |> Birth.call()
   end
 
   def draw(state) do

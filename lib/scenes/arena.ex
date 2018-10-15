@@ -34,6 +34,7 @@ defmodule Processor.Scene.Arena do
 
     state =
       %{
+        creature: Turtle,
         viewport: viewport,
         graph: graph,
         count: 0,
@@ -56,11 +57,11 @@ defmodule Processor.Scene.Arena do
   end
 
   def filter_event({:click, :btn_one}, _, state) do
-    {:stop, Birth.hatch_n(state, 1, Turtle)}
+    {:stop, Birth.hatch_n(state, 1)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, Birth.hatch_n(state, 10, Turtle)}
+    {:stop, Birth.hatch_n(state, 10)}
   end
 
   def filter_event({:click, :move_food}, _, state) do
@@ -72,8 +73,8 @@ defmodule Processor.Scene.Arena do
     |> Enum.each(&Turtle.update(&1, state))
 
     state
-    |> Reaper.call(turtles())
-    # |> Birth.call(Turtle)
+    |> Reaper.call()
+    |> Birth.call()
     |> Food.call()
     |> population
   end

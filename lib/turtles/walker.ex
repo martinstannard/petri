@@ -28,6 +28,10 @@ defmodule Processor.Turtles.Walker do
     GenServer.call(pid, :id)
   end
 
+  def health(pid) do
+    GenServer.call(pid, :health)
+  end
+
   def init(id) do
     state = %{
       id: id,
@@ -37,6 +41,7 @@ defmodule Processor.Turtles.Walker do
       x: Enum.random(0..800),
       y: Enum.random(0..800),
       color: Utils.random_color(),
+      health: 1000,
       tick: 0
     }
 
@@ -89,7 +94,7 @@ defmodule Processor.Turtles.Walker do
   end
 
   def tick(state) do
-    %{state | tick: state.tick + 1}
+    %{state | tick: state.tick + 1, health: state.health - 1}
   end
 
   def move(state) do

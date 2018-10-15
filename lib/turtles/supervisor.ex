@@ -21,6 +21,10 @@ defmodule Processor.Turtles.Supervisor do
     end)
   end
 
+  def terminate(pid) do
+    DynamicSupervisor.terminate_child(TurtleSupervisor, pid)
+  end
+
   def apply(func) do
     children
     |> Enum.map(&apply(func, [&1]))

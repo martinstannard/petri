@@ -25,12 +25,11 @@ defmodule Processor.Scene.Processes do
       @graph
       |> Nav.add_to_graph(__MODULE__)
       |> ProcessorUI.add_to_graph(__MODULE__)
-      |> push_graph()
 
-    # start a very simple timer
     {:ok, _} = :timer.send_interval(@animate_ms, :tick)
 
     state = %{
+      creature: Messenger,
       viewport: viewport,
       graph: graph,
       count: 0,
@@ -88,9 +87,7 @@ defmodule Processor.Scene.Processes do
 
   def add_processes(count, state) do
     state
-    |> Birth.hatch_n(count, Messenger)
-
-    # |> draw
+    |> Birth.hatch_n(count)
   end
 
   def draw(state) do

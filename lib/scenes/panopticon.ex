@@ -57,11 +57,11 @@ defmodule Processor.Scene.Panopticon do
   end
 
   def filter_event({:click, :btn_one}, _, state) do
-    {:stop, Birth.hatch_n(state, 1, Seer)}
+    {:stop, Birth.hatch_n(state, 1)}
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, Birth.hatch_n(state, 10, Seer)}
+    {:stop, Birth.hatch_n(state, 10)}
   end
 
   def filter_event({:click, :move_food}, _, state) do
@@ -73,8 +73,8 @@ defmodule Processor.Scene.Panopticon do
     |> Enum.each(&Seer.update(&1, state))
 
     state
-    |> Reaper.call(turtles())
-    # |> Birth.call(Seer)
+    |> Reaper.call()
+    |> Birth.call()
     |> Food.call()
     |> population
   end
