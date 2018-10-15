@@ -5,7 +5,10 @@ defmodule Processor.Scene.Walking do
 
   import Scenic.Primitives
 
-  alias Processor.Component.Nav
+  alias Processor.Component.{
+    Nav,
+    WalkingUI
+  }
 
   alias Processor.Turtles.{
     Supervisor,
@@ -13,12 +16,25 @@ defmodule Processor.Scene.Walking do
   }
 
   alias Processor.Arena.{
-    Birth
+    Birth,
+    Reaper
   }
 
-  @animate_ms 16
+  @animate_ms 30
+  @update_ms 30
 
   @graph Graph.build(font: :roboto, font_size: 24)
+         |> text("Count 0",
+           id: :population,
+           translate: {20, 750},
+           font_size: 64
+         )
+         |> text("0 ms",
+           id: :frames,
+           translate: {120, 750},
+           font_size: 32
+         )
+
   def init(_, opts) do
     Supervisor.clear()
     viewport = opts[:viewport]
@@ -26,28 +42,51 @@ defmodule Processor.Scene.Walking do
     graph =
       @graph
       |> Nav.add_to_graph(__MODULE__)
-      |> push_graph()
+      |> WalkingUI.add_to_graph(__MODULE__)
 
     # start a very simple animation timer
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
+    {:ok, _} = :timer.send_interval(@update_ms, :update)
 
     state = %{
       creature: Walker,
       viewport: viewport,
       graph: graph,
-      count: 0
+      count: 0,
+      run_state: true,
+      last_frame_time: Time.utc_now()
     }
 
     {:ok, state}
   end
 
+  def handle_info(:animate, %{run_state: false} = state), do: {:noreply, state}
+
   def handle_info(:animate, state) do
     new_state =
       state
-      |> update
+      |> frames
       |> draw
 
     {:noreply, new_state}
+  end
+
+  def handle_info(:update, %{run_state: false} = state), do: {:noreply, state}
+
+  def handle_info(:update, state) do
+    new_state =
+      state
+      |> update
+
+    {:noreply, new_state}
+  end
+
+  def filter_event({:click, :run}, _, state) do
+    g =
+      state.graph
+      |> Graph.modify(:run, &text(&1, run_label(!state)))
+
+    {:stop, %{state | graph: g, run_state: !state.run_state}}
   end
 
   def filter_event({:click, :btn_one}, _, state) do
@@ -82,4 +121,18 @@ defmodule Processor.Scene.Walking do
       | graph: graph
     }
   end
+
+  def frames(state) do
+    elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
+
+    g =
+      state.graph
+      |> Graph.modify(:frames, &text(&1, "#{elapsed} ms"))
+      |> Graph.modify(:population, &text(&1, "#{Supervisor.count()}"))
+
+    %{state | graph: g, last_frame_time: Time.utc_now()}
+  end
+
+  def run_label(%{run_state: true}), do: "Stop"
+  def run_label(_), do: "Go"
 end
