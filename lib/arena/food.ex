@@ -7,7 +7,7 @@ defmodule Processor.Arena.Food do
   food/light behaviour
   """
 
-  @food_amount 3_000.0
+  @food_amount 5_000.0
 
   def init(state) do
     {x, y} = coords()
