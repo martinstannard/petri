@@ -9,6 +9,9 @@ defmodule Processor.Arena.Reaper do
   @moduledoc """
   remove dead creatures
   """
+
+  def init(state), do: state
+
   def call(state) do
     %{state | graph: terminator(state)}
   end
