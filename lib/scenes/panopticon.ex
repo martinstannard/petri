@@ -17,6 +17,7 @@ defmodule Processor.Scene.Panopticon do
            translate: {20, 750},
            font_size: 64
          )
+  @modules [Birth, Reaper, Food]
 
   def init(_, opts) do
     Supervisor.clear()
@@ -37,11 +38,9 @@ defmodule Processor.Scene.Panopticon do
         creature: Seer,
         viewport: viewport,
         graph: graph,
-        count: 0,
-        food_x: 0,
-        food_y: 0
+        count: 0
       }
-      |> Food.init()
+      |> init_modules()
       |> Food.move()
 
     {:ok, state}
@@ -73,9 +72,8 @@ defmodule Processor.Scene.Panopticon do
     |> Enum.each(&Seer.update(&1, state))
 
     state
-    |> Reaper.call()
-    |> Birth.call()
-    |> Food.call()
+    |> call_modules()
+    |> move_food()
     |> population
   end
 
@@ -105,5 +103,27 @@ defmodule Processor.Scene.Panopticon do
       |> Graph.modify(:population, &text(&1, "#{turtle_count()}"))
 
     %{state | graph: g}
+  end
+
+  def init_modules(state) do
+    @modules
+    |> Enum.reduce(state, fn m, s ->
+      s |> m.init
+    end)
+  end
+
+  def call_modules(state) do
+    @modules
+    |> Enum.reduce(state, fn m, s ->
+      s |> m.call
+    end)
+  end
+
+  def move_food(state) do
+    if :rand.uniform() < 0.004 do
+      Food.move(state)
+    else
+      state
+    end
   end
 end

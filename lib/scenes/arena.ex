@@ -3,13 +3,15 @@ defmodule Processor.Scene.Arena do
 
   alias Scenic.Graph
 
+  import Utils.Modular
   import Scenic.Primitives
 
   alias Processor.Component.{ArenaUI, Nav}
-  alias Processor.Turtles.{Generic, Supervisor, Turtle}
+  alias Processor.Turtles.{Generic, Supervisor, Smeller}
   alias Processor.Arena.{Birth, Food, Reaper}
 
   @animate_ms 16
+  @modules [Food, Reaper, Birth]
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> text("0",
@@ -32,19 +34,14 @@ defmodule Processor.Scene.Arena do
     # start a very simple animation timer
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
-    state =
-      %{
-        creature: Turtle,
-        viewport: viewport,
-        graph: graph,
-        count: 0,
-        food_x: 0,
-        food_y: 0
-      }
-      |> Food.init()
-      |> Food.move()
+    state = %{
+      creature: Smeller,
+      viewport: viewport,
+      graph: graph,
+      count: 0
+    }
 
-    {:ok, state}
+    {:ok, state |> init_modules(@modules)}
   end
 
   def handle_info(:animate, state) do
@@ -70,12 +67,10 @@ defmodule Processor.Scene.Arena do
 
   def update(state) do
     Supervisor.children()
-    |> Enum.each(&Turtle.update(&1, state))
+    |> Enum.each(&state.creature.update(&1, state))
 
     state
-    |> Reaper.call()
-    |> Birth.call()
-    |> Food.call()
+    |> call_modules(@modules)
     |> population
   end
 

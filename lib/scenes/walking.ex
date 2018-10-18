@@ -1,27 +1,17 @@
 defmodule Processor.Scene.Walking do
   use Scenic.Scene
 
-  alias Scenic.Graph
-
+  import Utils.Modular
   import Scenic.Primitives
 
-  alias Processor.Component.{
-    Nav,
-    WalkingUI
-  }
-
-  alias Processor.Turtles.{
-    Supervisor,
-    Walker
-  }
-
-  alias Processor.Arena.{
-    Birth,
-    Reaper
-  }
+  alias Scenic.Graph
+  alias Processor.Component.{Nav, WalkingUI}
+  alias Processor.Turtles.{Supervisor, Walker}
+  alias Processor.Arena.{Birth, Reaper}
 
   @animate_ms 30
   @update_ms 30
+  @modules [Birth, Reaper]
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> text("Count 0",
