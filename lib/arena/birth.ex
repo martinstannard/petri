@@ -3,6 +3,8 @@ defmodule Processor.Arena.Birth do
   give birth to new turtles
   """
 
+  def init(state), do: state
+
   def call(state) do
     if :rand.uniform() < 0.01 do
       state
