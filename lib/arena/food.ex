@@ -4,11 +4,12 @@ defmodule Processor.Arena.Food do
   import Scenic.Primitives, only: [{:circle, 3}, {:update_opts, 2}]
 
   @moduledoc """
-  food/light behaviour
+  Provides food functionality to the scene.
   """
 
-  @food_amount 5_000.0
+  @food_amount 1_000.0
 
+  @doc "add food state variable to scene state"
   def init(state) do
     {x, y} = coords()
 
@@ -18,19 +19,23 @@ defmodule Processor.Arena.Food do
     |> Map.put(:food_amount, @food_amount)
   end
 
+  @doc "update the state"
   def call(state) do
     state
     |> consume
     |> move?
-    |> draw
+    |> update_graph
   end
 
+  @doc "if the food is exhausted, reset and move to a new location"
   def move?(%{food_amount: fa} = state) when fa < 0.0 do
     move(state)
   end
 
+  @doc "there is still food, do nothing"
   def move?(state), do: state
 
+  @doc "move the food and reset the amount of food"
   def move(state) do
     {x, y} = coords()
 
@@ -42,6 +47,7 @@ defmodule Processor.Arena.Food do
     %{state | graph: g, food_x: x, food_y: y, food_amount: @food_amount}
   end
 
+  @doc "add primitives to the graph"
   def add(graph) do
     graph
     |> circle(10, id: :food, t: coords, fill: {:color, :yellow})
@@ -52,12 +58,10 @@ defmodule Processor.Arena.Food do
     )
   end
 
-  def draw(state) do
-    # IO.inspect(state, label: :food)
-
+  defp update_graph(state) do
     g =
       state.graph
-      |> Graph.modify(:food, &update_opts(&1, fill: colour(state)))
+      |> Graph.modify(:food, &update_opts(&1, fill: {:color, colour(state)}))
 
     %{state | graph: g}
   end
@@ -71,13 +75,13 @@ defmodule Processor.Arena.Food do
   end
 
   defp consumed do
-    Supervisor.apply(&Processor.Turtles.Turtle.state/1)
+    Supervisor.apply(&Processor.Turtles.Smeller.state/1)
     |> Enum.map(&Map.get(&1, :eaten))
     |> Enum.sum()
   end
 
   defp colour(state) do
     alpha = max(0, round(state.food_amount / @food_amount * 255))
-    {0xFF, 0xFF, 0x33, alpha}
+    {0xFF, 0xFF, 0x33, min(255, alpha)}
   end
 end
