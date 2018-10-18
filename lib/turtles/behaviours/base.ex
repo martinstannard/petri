@@ -18,7 +18,7 @@ defmodule Processor.Turtles.Behaviour.Base do
     })
   end
 
-  def call(state) do
+  def call(state, _) do
     state
     |> tick
     |> forward
