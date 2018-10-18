@@ -5,28 +5,39 @@ defmodule Processor.Turtles.Behaviour.Feed do
 
   @max_distance 20_000.0
 
-  def init(state, max_health) do
+  def init(state) do
     state
-    |> Map.put(:max_health, max_health)
+    |> Map.put(:food_distance, @max_distance)
+    |> Map.put(:food_delta, 0.0)
     |> Map.put(:eaten, 0.0)
   end
 
-  def call(%{food_distance: fd} = state) when fd < @max_distance do
-    health_bonus = (@max_distance - state.food_distance) / (@max_distance / 2.0)
+  def call(state, world) do
+    distance = distance_to_food(state, world)
 
     %{
       state
-      | health: new_health(state, health_bonus),
-        eaten: health_bonus
+      | health: new_health(state, distance |> bonus),
+        food_distance: distance,
+        food_delta: distance - state.food_distance,
+        eaten: distance |> bonus
     }
   end
 
-  def call(state) do
-    %{state | eaten: 0}
+  defp bonus(distance) when distance < @max_distance do
+    (@max_distance - distance) / (@max_distance / 2.0)
   end
 
-  def new_health(state, health_bonus) do
+  defp bonus(_), do: 0
+
+  defp new_health(state, health_bonus) do
     state.max_health
     |> min(state.health + health_bonus)
+  end
+
+  defp distance_to_food(state, %{food_x: food_x, food_y: food_y}) do
+    a = (food_x - state.x) * (food_x - state.x)
+    b = (food_y - state.y) * (food_y - state.y)
+    a + b
   end
 end

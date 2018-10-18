@@ -7,7 +7,7 @@ defmodule Processor.Turtles.Behaviour.Vision do
     state
     |> Map.put(:eye_width, 1.0)
     |> Map.put(:eye_offset, 60.0)
-    |> Map.put(:bearing, 60.0)
+    |> Map.put(:bearing, 4.0)
   end
 
   def call(state, world) do

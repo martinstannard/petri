@@ -10,7 +10,7 @@ defmodule Processor.Turtles.Behaviour.Colorize do
     |> Map.put(:color_trigger, Enum.random(1..10) / 100.0)
   end
 
-  def call(state) do
+  def call(state, _) do
     if :rand.uniform() < state.color_trigger do
       %{state | color: Enum.random(@colors)}
     else

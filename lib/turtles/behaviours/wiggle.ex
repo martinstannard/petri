@@ -7,7 +7,7 @@ defmodule Processor.Turtles.Behaviour.Wiggle do
     state
   end
 
-  def call(state) do
+  def call(state, _) do
     wiggle = state.angle * :rand.uniform() / 3.0
 
     %{
