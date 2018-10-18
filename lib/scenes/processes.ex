@@ -33,7 +33,7 @@ defmodule Processor.Scene.Processes do
       last_frame_time: Time.utc_now()
     }
 
-    {:ok, state}
+    {:ok, add_processes(70, state)}
   end
 
   def handle_info(:tick, state) do
