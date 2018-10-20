@@ -30,6 +30,7 @@ defmodule Processor.Scene.Processes do
       viewport: viewport,
       graph: graph,
       count: 0,
+      ping_count: 0,
       last_frame_time: Time.utc_now()
     }
 
@@ -39,6 +40,9 @@ defmodule Processor.Scene.Processes do
   def handle_info(:tick, state) do
     {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
     elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
+
+    send_ping(state.ping_count)
+    IO.inspect("tick #{state.count}")
 
     if len > 10 do
       {:noreply, state}
@@ -56,13 +60,17 @@ defmodule Processor.Scene.Processes do
   end
 
   def filter_event({:click, :ping}, _, state) do
-    send_ping(0)
+    send_ping(1)
     {:stop, state}
   end
 
   def filter_event({:click, :multiping}, _, state) do
     send_ping(20)
     {:stop, state}
+  end
+
+  def filter_event({:value_changed, :ping_count, count}, _, state) do
+    {:stop, %{state | ping_count: count}}
   end
 
   def filter_event({:click, id}, _, state) when is_pid(id) do

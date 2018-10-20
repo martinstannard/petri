@@ -7,10 +7,10 @@ defmodule Processor.Turtles.Messenger do
   alias Scenic.Graph
   alias Processor.Turtles.Supervisor
 
-  import Scenic.Primitives
+  import Scenic.Primitives, only: [{:text, 2}, {:text, 3}, {:rrect, 3}, {:update_opts, 2}]
 
   @columns 7
-  @off_color :dim_grey
+  @off_color :green
 
   def start_link(count) do
     GenServer.start_link(__MODULE__, count)
@@ -28,14 +28,27 @@ defmodule Processor.Turtles.Messenger do
     GenServer.cast(pid, {:ping, count})
   end
 
+  def ping_count(pid) do
+    GenServer.cast(pid, :ping_count)
+  end
+
+  def state(pid) do
+    GenServer.cast(pid, :state)
+  end
+
   def init(count) do
     {
       :ok,
       %{
+        id: id(),
+        button_id: button_id(),
+        text_id: text_id(),
+        count_id: text_id(),
         x: 30 + rem(count, @columns) * 110,
-        y: 80 + div(count, @columns) * 50,
+        y: 80 + div(count, @columns) * 70,
         color: @off_color,
-        dirty: false
+        dirty: false,
+        ping_count: 0
       }
     }
   end
@@ -46,6 +59,14 @@ defmodule Processor.Turtles.Messenger do
 
   def handle_call({:add_to_graph, graph}, _, state) do
     {:reply, add(graph, state), state}
+  end
+
+  def handle_call(:ping_count, _, state) do
+    {:reply, state.ping_count, state}
+  end
+
+  def handle_call(:state, _, state) do
+    {:reply, state, state}
   end
 
   def handle_cast({:ping, count}, state) do
@@ -65,14 +86,14 @@ defmodule Processor.Turtles.Messenger do
   end
 
   defp do_ping(count, state) do
-    send_to_sibling(count)
+    send_to_sibling(count - 1)
     Process.send_after(self(), :unping, 500)
-    %{state | color: ping_color(count), dirty: true}
+    %{state | color: :lime, ping_count: state.ping_count + 1, dirty: true}
   end
 
   defp add(graph, state) do
     graph
-    |> rrect({100, 40, 6},
+    |> rrect({100, 60, 6},
       id: button_id(),
       fill: {:color, @off_color},
       stroke: {4, :grey},
@@ -81,8 +102,15 @@ defmodule Processor.Turtles.Messenger do
     |> text(id(),
       id: text_id(),
       fill: {:color, :white},
-      t: {state.x + 10, state.y + 25},
+      t: {state.x + 10, state.y + 20},
       font_size: 20
+    )
+    |> text("#{state.ping_count}",
+      id: count_id(),
+      fill: {:color, :white},
+      text_align: :center,
+      t: {state.x + 50, state.y + 50},
+      font_size: 40
     )
   end
 
