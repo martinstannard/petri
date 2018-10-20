@@ -39,7 +39,7 @@ defmodule Processor.Scene.Processes do
 
   def handle_info(:tick, state) do
     {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
-    elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
+    # elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
     send_ping(state.ping_count)
 
     if len > 10 do

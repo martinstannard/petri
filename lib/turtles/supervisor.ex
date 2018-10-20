@@ -15,7 +15,7 @@ defmodule Processor.Turtles.Supervisor do
   end
 
   def clear do
-    children
+    children()
     |> Enum.each(fn turtle ->
       DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
     end)
@@ -37,8 +37,8 @@ defmodule Processor.Turtles.Supervisor do
 
   defp random([]), do: nil
 
-  defp random(children) do
-    children()
+  defp random(childs) do
+    childs
     |> Enum.random()
   end
 end
