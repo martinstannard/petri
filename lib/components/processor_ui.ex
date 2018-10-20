@@ -40,6 +40,10 @@ defmodule Processor.Component.ProcessorUI do
         theme: :secondary,
         translate: {vp_width - 100, @font_size * 2}
       )
+      |> slider({{0, 20}, 0},
+        id: :ping_count,
+        translate: {vp_width - 700, @font_size * 2 + 10}
+      )
       |> push_graph()
 
     {:ok, %{graph: graph, viewport: opts[:viewport]}}

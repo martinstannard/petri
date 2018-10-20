@@ -77,7 +77,7 @@ defmodule Processor.Scene.Arena do
   def draw(state) do
     graph =
       Supervisor.children()
-      |> Enum.reduce(state.graph, &Turtle.draw(&1, &2))
+      |> Enum.reduce(state.graph, &state.creature.draw(&1, &2))
       |> push_graph
 
     %{

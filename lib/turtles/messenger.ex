@@ -94,6 +94,7 @@ defmodule Processor.Turtles.Messenger do
     graph
     |> Graph.modify(button_id(), &update_opts(&1, fill: state.color))
     |> Graph.modify(text_id(), &update_opts(&1, fill: :white))
+    |> Graph.modify(count_id(), &text(&1, "#{state.ping_count}"))
   end
 
   defp send_to_sibling(0), do: nil
@@ -106,12 +107,7 @@ defmodule Processor.Turtles.Messenger do
   defp deliver([], _), do: nil
 
   defp deliver(sibling, count) do
-    Process.send_after(sibling, {:ping, count - 1}, 50)
-  end
-
-  defp ping_color(count) do
-    green = round(155.0 + 5.0 * count)
-    {0x88, green, 0x33}
+    Process.send_after(sibling, {:ping, count}, 50)
   end
 
   defp button_id do
@@ -120,6 +116,10 @@ defmodule Processor.Turtles.Messenger do
 
   defp text_id do
     id() <> "_text"
+  end
+
+  defp count_id do
+    id() <> "_count"
   end
 
   defp id do
