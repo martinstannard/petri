@@ -34,15 +34,13 @@ defmodule Processor.Scene.Processes do
       last_frame_time: Time.utc_now()
     }
 
-    {:ok, add_processes(70, state)}
+    {:ok, add_processes(56, state)}
   end
 
   def handle_info(:tick, state) do
     {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
     elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
-
     send_ping(state.ping_count)
-    IO.inspect("tick #{state.count}")
 
     if len > 10 do
       {:noreply, state}
@@ -95,6 +93,8 @@ defmodule Processor.Scene.Processes do
 
     %{state | graph: graph}
   end
+
+  def send_ping(0), do: nil
 
   def send_ping(count) do
     Supervisor.random_child()

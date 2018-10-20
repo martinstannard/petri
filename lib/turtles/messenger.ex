@@ -125,7 +125,7 @@ defmodule Processor.Turtles.Messenger do
     |> Graph.modify(count_id(), &text(&1, "#{state.ping_count}"))
   end
 
-  defp send_to_sibling(0), do: nil
+  defp send_to_sibling(count) when count < 1, do: nil
 
   defp send_to_sibling(count) do
     Supervisor.random_child()
