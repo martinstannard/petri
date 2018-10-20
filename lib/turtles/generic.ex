@@ -3,19 +3,10 @@ defmodule Processor.Turtles.Generic do
 
   alias Scenic.Graph
 
-  alias Processor.Turtles.Utils
-
-  alias Processor.Turtles.Behaviour.{
-    Base,
-    Colorize,
-    Feed,
-    Scale,
-    Smell
-  }
+  alias Processor.Turtles.Behaviour.Base
 
   import Scenic.Primitives
 
-  @max_health 1000
   @tri {{0, -15}, {8, 8}, {-8, 8}}
 
   def start_link(id) do
@@ -34,10 +25,6 @@ defmodule Processor.Turtles.Generic do
     GenServer.call(pid, {:add_to_graph, graph})
   end
 
-  # def id(pid) do
-  #   GenServer.call(pid, :id)
-  # end
-
   def init(id) do
     state = %{
       id: id,
@@ -54,7 +41,7 @@ defmodule Processor.Turtles.Generic do
     }
   end
 
-  def handle_cast({:update, world}, state) do
+  def handle_cast({:update, _world}, state) do
     new_state =
       state
       |> Base.call()

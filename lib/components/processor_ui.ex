@@ -4,12 +4,11 @@ defmodule Processor.Component.ProcessorUI do
   alias Scenic.ViewPort
   alias Scenic.Graph
 
-  import Scenic.Primitives, only: [{:text, 3}]
+  # import Scenic.Primitives, only: [{:text, 3}]
   import Scenic.Components
 
   @height 110
   @font_size 20
-  @indent 30
 
   # --------------------------------------------------------
   def verify(scene) when is_atom(scene), do: {:ok, scene}

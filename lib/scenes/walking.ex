@@ -3,6 +3,7 @@ defmodule Processor.Scene.Walking do
 
   import Utils.Modular
   import Scenic.Primitives
+  import Scenic.Components
 
   alias Scenic.Graph
   alias Processor.Component.{Nav, WalkingUI}
@@ -24,6 +25,11 @@ defmodule Processor.Scene.Walking do
            translate: {120, 750},
            font_size: 32
          )
+         |> button("Start",
+           id: :run,
+           theme: :primary,
+           translate: {400, 750}
+         )
 
   def init(_, opts) do
     Supervisor.clear()
@@ -43,14 +49,12 @@ defmodule Processor.Scene.Walking do
       viewport: viewport,
       graph: graph,
       count: 0,
-      run_state: true,
+      run_state: false,
       last_frame_time: Time.utc_now()
     }
 
     {:ok, state}
   end
-
-  def handle_info(:animate, %{run_state: false} = state), do: {:noreply, state}
 
   def handle_info(:animate, state) do
     new_state =
@@ -72,11 +76,11 @@ defmodule Processor.Scene.Walking do
   end
 
   def filter_event({:click, :run}, _, state) do
-    g =
-      state.graph
-      |> Graph.modify(:run, &text(&1, run_label(!state)))
+    # g =
+    #   state.graph
+    #   |> Graph.modify(:run, &text(&1, run_label(!state)))
 
-    {:stop, %{state | graph: g, run_state: !state.run_state}}
+    {:stop, %{state | run_state: !state.run_state}}
   end
 
   def filter_event({:click, :btn_one}, _, state) do
@@ -119,11 +123,11 @@ defmodule Processor.Scene.Walking do
       state.graph
       |> Graph.modify(:frames, &text(&1, "#{elapsed} ms"))
       |> Graph.modify(:population, &text(&1, "#{Supervisor.count()}"))
-      |> Graph.modify(:run, &text(&1, run_label(!state)))
+      |> Graph.modify(:run, &button(&1, run_label(state.run_state)))
 
     %{state | graph: g, last_frame_time: Time.utc_now()}
   end
 
-  def run_label(%{run_state: true}), do: "Stop"
-  def run_label(_), do: "Go"
+  def run_label(true), do: "Stop"
+  def run_label(_), do: "Start"
 end

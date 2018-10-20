@@ -51,7 +51,7 @@ defmodule Processor.Turtles.Walker do
     }
   end
 
-  def handle_cast({:update, world}, state) do
+  def handle_cast({:update, _world}, state) do
     new_state =
       state
       |> tick

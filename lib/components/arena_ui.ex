@@ -9,7 +9,6 @@ defmodule Processor.Component.ArenaUI do
 
   @height 110
   @font_size 20
-  @indent 30
 
   # --------------------------------------------------------
   def verify(scene) when is_atom(scene), do: {:ok, scene}

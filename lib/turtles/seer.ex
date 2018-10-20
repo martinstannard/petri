@@ -8,7 +8,6 @@ defmodule Processor.Turtles.Seer do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Turtles.Utils
   alias Processor.Turtles.Behaviour.{Feed, Health, Move, Vision}
 
   @tri {{0, -15}, {8, 8}, {-8, 8}}

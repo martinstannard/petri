@@ -1,10 +1,7 @@
 defmodule Processor.Arena.Reaper do
   alias Scenic.Graph
 
-  alias Processor.Turtles.{
-    Supervisor,
-    Turtle
-  }
+  alias Processor.Turtles.Supervisor
 
   @moduledoc """
   remove dead creatures

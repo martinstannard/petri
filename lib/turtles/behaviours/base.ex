@@ -41,7 +41,7 @@ defmodule Processor.Turtles.Behaviour.Base do
     }
   end
 
-  def right(state, angle) do
+  def right(state, _angle) do
     %{state | heading: state.heading - 0.01}
   end
 

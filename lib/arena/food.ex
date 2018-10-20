@@ -49,11 +49,13 @@ defmodule Processor.Arena.Food do
 
   @doc "add primitives to the graph"
   def add(graph) do
+    initial_coords = coords()
+
     graph
-    |> circle(10, id: :food, t: coords, fill: {:color, :yellow})
+    |> circle(10, id: :food, t: initial_coords, fill: {:color, :yellow})
     |> circle(141,
       id: :food_glow,
-      t: coords,
+      t: initial_coords,
       fill: {:radial, {0, 0, 0, 141, {0xFF, 0xFF, 0x33, 0x20}, {0xFF, 0xFF, 0x33, 0x08}}}
     )
   end

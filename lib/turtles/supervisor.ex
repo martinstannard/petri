@@ -26,19 +26,19 @@ defmodule Processor.Turtles.Supervisor do
   end
 
   def apply(func) do
-    children
+    children()
     |> Enum.map(&apply(func, [&1]))
   end
 
   def random_child do
-    children
+    children()
     |> random()
   end
 
   defp random([]), do: nil
 
   defp random(children) do
-    children
+    children()
     |> Enum.random()
   end
 end

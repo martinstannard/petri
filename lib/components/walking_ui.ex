@@ -16,7 +16,7 @@ defmodule Processor.Component.WalkingUI do
   def verify(_), do: :invalid_data
 
   # ----------------------------------------------------------------------------
-  def init(current_scene, opts) do
+  def init(_current_scene, opts) do
     # Get the viewport width
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
       opts[:viewport]
@@ -24,13 +24,6 @@ defmodule Processor.Component.WalkingUI do
 
     graph =
       Graph.build(font_size: @font_size, translate: {0, vp_height - @height})
-      # |> text("Run", t: {vp_width - 330, @font_size * 3})
-      # |> toggle(true, id: :run, t: {vp_width - 270, @font_size * 3})
-      |> button("Start",
-        id: :run,
-        theme: :secondary,
-        translate: {vp_width - 500, @font_size * 2}
-      )
       |> button("Add 1",
         id: :btn_one,
         theme: :secondary,
