@@ -3,13 +3,14 @@ defmodule Processor.Turtles.Behaviour.Move do
   implements movement and turning
   """
 
-  def init(state) do
+  def init(state, opts \\ %{}) do
     state
     |> Map.put(:x, Enum.random(0..800))
     |> Map.put(:y, Enum.random(0..800))
     |> Map.put(:heading, 0.0)
     |> Map.put(:velocity, Enum.random(5..20) / 4.0)
     |> Map.put(:angle, :rand.uniform() / 4.0 * Enum.random([-1.0, 1.0]))
+    |> Map.merge(opts)
 
     # |> Map.put(:angle, (:rand.uniform() + 0.47) * Enum.random([-1.0, 1.0]))
   end
@@ -17,7 +18,6 @@ defmodule Processor.Turtles.Behaviour.Move do
   def call(state, _) do
     state
     |> forward
-    |> clamp_heading
   end
 
   def forward(state) do
@@ -26,6 +26,7 @@ defmodule Processor.Turtles.Behaviour.Move do
       | x: new_x(state.x, state.heading, state.velocity),
         y: new_y(state.y, state.heading, state.velocity)
     }
+    |> clamp_heading
   end
 
   def turn(state) do

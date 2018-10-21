@@ -51,7 +51,9 @@ defmodule Processor.Turtles.Smeller do
 
     {
       :ok,
-      state |> init_modules(@modules)
+      state
+      |> init_modules(List.delete(@modules, Move))
+      |> Move.init(%{angle: angle()})
     }
   end
 
@@ -105,5 +107,9 @@ defmodule Processor.Turtles.Smeller do
     r = round(255.0 * (1.0 - percentage))
     g = round(255.0 * percentage)
     {r, g, 0x22}
+  end
+
+  defp angle do
+    :rand.uniform() / 4.0 * Enum.random([-1.0, 1.0])
   end
 end

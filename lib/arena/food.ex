@@ -4,10 +4,11 @@ defmodule Processor.Arena.Food do
   import Scenic.Primitives, only: [{:circle, 3}, {:update_opts, 2}]
 
   @moduledoc """
+  A food source for the scene. Food has a position and a quantity.
   Provides food functionality to the scene.
   """
 
-  @food_amount 1_000.0
+  @food_quantity 4_000.0
 
   @doc "add food state variable to scene state"
   def init(state) do
@@ -17,6 +18,7 @@ defmodule Processor.Arena.Food do
     |> Map.put(:food_x, x)
     |> Map.put(:food_y, y)
     |> Map.put(:food_quantity, @food_quantity)
+    |> move
   end
 
   @doc "update the state"

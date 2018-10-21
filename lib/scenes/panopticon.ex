@@ -30,7 +30,6 @@ defmodule Processor.Scene.Panopticon do
       |> Food.add()
       |> push_graph()
 
-    # start a very simple animation timer
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
 
     state =
@@ -41,7 +40,6 @@ defmodule Processor.Scene.Panopticon do
         count: 0
       }
       |> init_modules()
-      |> Food.move()
 
     {:ok, state}
   end
@@ -55,14 +53,17 @@ defmodule Processor.Scene.Panopticon do
     {:noreply, new_state}
   end
 
+  @doc "handle event from Add 1 button"
   def filter_event({:click, :btn_one}, _, state) do
     {:stop, Birth.hatch_n(state, 1)}
   end
 
+  @doc "handle event from Add 10 button"
   def filter_event({:click, :btn_ten}, _, state) do
     {:stop, Birth.hatch_n(state, 10)}
   end
 
+  @doc "handle event from Move button"
   def filter_event({:click, :move_food}, _, state) do
     {:stop, Food.move(state)}
   end
