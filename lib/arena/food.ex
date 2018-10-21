@@ -16,7 +16,7 @@ defmodule Processor.Arena.Food do
     state
     |> Map.put(:food_x, x)
     |> Map.put(:food_y, y)
-    |> Map.put(:food_amount, @food_amount)
+    |> Map.put(:food_quantity, @food_quantity)
   end
 
   @doc "update the state"
@@ -28,7 +28,7 @@ defmodule Processor.Arena.Food do
   end
 
   @doc "if the food is exhausted, reset and move to a new location"
-  def move?(%{food_amount: fa} = state) when fa < 0.0 do
+  def move?(%{food_quantity: fa} = state) when fa < 0.0 do
     move(state)
   end
 
@@ -44,7 +44,7 @@ defmodule Processor.Arena.Food do
       |> Graph.modify(:food, &update_opts(&1, translate: {x, y}, fill: colour(state)))
       |> Graph.modify(:food_glow, &update_opts(&1, translate: {x, y}))
 
-    %{state | graph: g, food_x: x, food_y: y, food_amount: @food_amount}
+    %{state | graph: g, food_x: x, food_y: y, food_quantity: @food_quantity}
   end
 
   @doc "add primitives to the graph"
@@ -73,7 +73,7 @@ defmodule Processor.Arena.Food do
   end
 
   defp consume(state) do
-    %{state | food_amount: state.food_amount - consumed()}
+    %{state | food_quantity: state.food_quantity - consumed()}
   end
 
   defp consumed do
@@ -83,7 +83,7 @@ defmodule Processor.Arena.Food do
   end
 
   defp colour(state) do
-    alpha = max(0, round(state.food_amount / @food_amount * 255))
+    alpha = max(0, round(state.food_quantity / @food_quantity * 255))
     {0xFF, 0xFF, 0x33, min(255, alpha)}
   end
 end
