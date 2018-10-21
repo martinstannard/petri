@@ -6,7 +6,8 @@ defmodule Processor.Turtles.Behaviour.Move do
   def init(state) do
     state
     |> Map.put(:heading, 0.0)
-    |> Map.put(:angle, (:rand.uniform() + 0.47) * Enum.random([-1.0, 1.0]))
+    # |> Map.put(:angle, (:rand.uniform() + 0.47) * Enum.random([-1.0, 1.0]))
+    |> Map.put(:angle, :rand.uniform() / 4.0)
     |> Map.put(:velocity, Enum.random(5..20) / 4.0)
     |> Map.put(:x, Enum.random(0..800))
     |> Map.put(:y, Enum.random(0..800))

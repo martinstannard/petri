@@ -1,6 +1,7 @@
 defmodule Processor.Turtles.Behaviour.Feed do
   @moduledoc """
   functionality to feed from a food source(s)
+  calculates distance to food, and adds health if close enough
   """
 
   @max_distance 20_000.0

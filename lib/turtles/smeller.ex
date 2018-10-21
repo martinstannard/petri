@@ -9,11 +9,11 @@ defmodule Processor.Turtles.Smeller do
 
   alias Scenic.Graph
   alias Processor.Turtles.Utils
-  alias Processor.Turtles.Behaviour.{Feed, Health, Smell, Wiggle}
+  alias Processor.Turtles.Behaviour.{Feed, Health, Move, Smell, Wiggle}
 
   @max_health 1000
   @tri {{0, -15}, {8, 8}, {-8, 8}}
-  @modules [Feed, Health, Smell, Wiggle]
+  @modules [Feed, Health, Smell, Move]
 
   def start_link(id) do
     GenServer.start_link(__MODULE__, id)
@@ -63,10 +63,11 @@ defmodule Processor.Turtles.Smeller do
   def handle_cast({:update, world}, state) do
     new_state =
       state
-      |> tick
+      # |> tick
       |> call_modules(@modules, world)
-      |> forward
-      |> turn
+
+    # |> forward
+    # |> turn
 
     {:noreply, new_state}
   end
@@ -109,7 +110,7 @@ defmodule Processor.Turtles.Smeller do
   end
 
   def tick(state) do
-    %{state | tick: state.tick + 1, health: state.health - 1}
+    %{state | tick: state.tick + 1}
   end
 
   def move(state) do

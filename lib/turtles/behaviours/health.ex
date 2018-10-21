@@ -18,7 +18,7 @@ defmodule Processor.Turtles.Behaviour.Health do
   end
 
   defp health_colour(health) do
-    percentage = health / 1000.0
+    percentage = health / @max_health
     r = round(255.0 * (1.0 - percentage))
     g = round(255.0 * percentage)
     {r, g, 0x22}

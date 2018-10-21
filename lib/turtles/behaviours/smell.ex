@@ -5,24 +5,30 @@ defmodule Processor.Turtles.Behaviour.Smell do
 
   def init(state) do
     state
-    |> Map.put(:food_distance, 1_000_000.0)
-    |> Map.put(:food_delta, 0.0)
   end
 
-  def call(state, world) do
-    new_distance = distance_to_food(state, world)
-    delta = new_distance - state.food_distance
-
-    %{
-      state
-      | food_distance: new_distance,
-        food_delta: delta
-    }
+  def call(state, _world) do
+    state
+    |> turn
   end
 
-  defp distance_to_food(state, %{food_x: food_x, food_y: food_y}) do
-    a = (food_x - state.x) * (food_x - state.x)
-    b = (food_y - state.y) * (food_y - state.y)
-    a + b
+  def turn(%{food_delta: fd} = state) when fd < 0 do
+    state
   end
+
+  def turn(state) do
+    state
+    |> Map.put(:heading, state.heading - state.angle)
+    |> clamp_heading
+  end
+
+  def clamp_heading(%{heading: heading} = state) when heading > 6.283185307179586 do
+    %{state | heading: state.heading - 2.0 * :math.pi()}
+  end
+
+  def clamp_heading(%{heading: heading} = state) when heading < 0 do
+    %{state | heading: state.heading + 2.0 * :math.pi()}
+  end
+
+  def clamp_heading(state), do: state
 end
