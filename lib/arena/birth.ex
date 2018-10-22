@@ -3,10 +3,13 @@ defmodule Processor.Arena.Birth do
   give birth to new turtles
   """
 
-  def init(state), do: state
+  def init(state) do
+    state
+    |> Map.put(:birth_rate, 0.01)
+  end
 
   def call(state) do
-    if :rand.uniform() < 0.01 do
+    if :rand.uniform() < state.birth_rate do
       state
       |> hatch
     else
