@@ -48,14 +48,16 @@ defmodule Processor.Scene.Walking do
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
     {:ok, _} = :timer.send_interval(@update_ms, :update)
 
-    state = %{
-      creature: Walker,
-      viewport: opts[:viewport],
-      graph: graph,
-      count: 0,
-      run_state: false,
-      last_frame_time: Time.utc_now()
-    }
+    state =
+      %{
+        creature: Walker,
+        viewport: opts[:viewport],
+        graph: graph,
+        count: 0,
+        run_state: false,
+        last_frame_time: Time.utc_now()
+      }
+      |> init_modules(@modules)
 
     {:ok, state}
   end
