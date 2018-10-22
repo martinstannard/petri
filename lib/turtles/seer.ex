@@ -88,6 +88,5 @@ defmodule Processor.Turtles.Seer do
   defp add(graph, state) do
     graph
     |> triangle(@tri, id: state.id)
-    |> text("test", id: "#{state.id}_text", fill: {:color, :blue})
   end
 end

@@ -6,6 +6,7 @@ defmodule Processor.Scene.Walking do
   import Scenic.Components
 
   alias Scenic.Graph
+  alias Scenic.ViewPort
   alias Processor.Component.{Nav, WalkingUI}
   alias Processor.Turtles.{Supervisor, Walker}
   alias Processor.Arena.{Birth, Reaper}
@@ -28,12 +29,15 @@ defmodule Processor.Scene.Walking do
          |> button("Start",
            id: :run,
            theme: :primary,
-           translate: {400, 750}
+           translate: {500, 730}
          )
 
   def init(_, opts) do
     Supervisor.clear()
-    viewport = opts[:viewport]
+
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
+      opts[:viewport]
+      |> ViewPort.info()
 
     graph =
       @graph
@@ -46,7 +50,7 @@ defmodule Processor.Scene.Walking do
 
     state = %{
       creature: Walker,
-      viewport: viewport,
+      viewport: opts[:viewport],
       graph: graph,
       count: 0,
       run_state: false,
