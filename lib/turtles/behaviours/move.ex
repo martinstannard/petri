@@ -7,8 +7,8 @@ defmodule Processor.Turtles.Behaviour.Move do
     state
     |> Map.put(:x, Enum.random(0..800))
     |> Map.put(:y, Enum.random(0..800))
-    |> Map.put(:heading, 0.0)
-    |> Map.put(:velocity, Enum.random(5..20) / 4.0)
+    |> Map.put(:heading, :rand.uniform() * 2 * :math.pi())
+    |> Map.put(:velocity, Enum.random(5..20) / 8.0)
     |> Map.put(:angle, :rand.uniform() / 4.0 * Enum.random([-1.0, 1.0]))
     |> Map.merge(opts)
 
