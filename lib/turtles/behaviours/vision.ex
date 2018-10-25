@@ -4,7 +4,7 @@ defmodule Processor.Turtles.Behaviour.Vision do
   """
   @twopi 2.0 * :math.pi()
 
-  def init(state) do
+  def init(state, opts \\ %{}) do
     ns =
       state
       |> Map.put(:eye_width, :rand.uniform() * :math.pi())

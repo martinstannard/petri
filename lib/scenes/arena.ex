@@ -41,7 +41,7 @@ defmodule Processor.Scene.Arena do
       count: 0
     }
 
-    {:ok, state |> init_modules(@modules)}
+    {:ok, state |> init_modules(@modules, %{birth_rate: 0.01})}
   end
 
   def handle_info(:animate, state) do

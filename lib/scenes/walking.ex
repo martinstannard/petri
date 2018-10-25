@@ -18,12 +18,12 @@ defmodule Processor.Scene.Walking do
   @graph Graph.build(font: :roboto, font_size: 24)
          |> text("Count 0",
            id: :population,
-           translate: {20, 750},
+           translate: {600, 120},
            font_size: 64
          )
          |> text("0 ms",
            id: :frames,
-           translate: {120, 750},
+           translate: {700, 120},
            font_size: 32
          )
          |> button("Start",
@@ -35,9 +35,9 @@ defmodule Processor.Scene.Walking do
   def init(_, opts) do
     Supervisor.clear()
 
-    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
-      opts[:viewport]
-      |> ViewPort.info()
+    # {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
+    #   opts[:viewport]
+    #   |> ViewPort.info()
 
     graph =
       @graph
@@ -65,7 +65,7 @@ defmodule Processor.Scene.Walking do
   def handle_info(:animate, state) do
     new_state =
       state
-      |> frames
+      |> modify_ui
       |> draw
 
     {:noreply, new_state}
@@ -82,10 +82,6 @@ defmodule Processor.Scene.Walking do
   end
 
   def filter_event({:click, :run}, _, state) do
-    # g =
-    #   state.graph
-    #   |> Graph.modify(:run, &text(&1, run_label(!state)))
-
     {:stop, %{state | run_state: !state.run_state}}
   end
 
@@ -122,7 +118,7 @@ defmodule Processor.Scene.Walking do
     }
   end
 
-  def frames(state) do
+  def modify_ui(state) do
     elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
 
     g =

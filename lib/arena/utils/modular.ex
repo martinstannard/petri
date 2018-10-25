@@ -3,10 +3,10 @@ defmodule Utils.Modular do
   helper functions for modules used in scenes and creatures
   """
 
-  def init_modules(state, modules) do
+  def init_modules(state, modules, opts \\ %{}) do
     modules
     |> Enum.reduce(state, fn m, s ->
-      s |> m.init
+      s |> m.init(opts)
     end)
   end
 

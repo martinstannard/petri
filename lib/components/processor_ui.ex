@@ -34,13 +34,13 @@ defmodule Processor.Component.ProcessorUI do
         theme: :secondary,
         translate: {vp_width - 200, @font_size * 2}
       )
-      |> button("Add 10",
+      |> button("Add Row",
         id: :btn_ten,
         theme: :secondary,
         translate: {vp_width - 100, @font_size * 2}
       )
       |> slider({{0, 20}, 0},
-        id: :ping_count,
+        id: :chain_length,
         translate: {vp_width - 700, @font_size * 2 + 10}
       )
       |> push_graph()

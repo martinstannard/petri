@@ -53,7 +53,7 @@ defmodule Processor.Turtles.Smeller do
       :ok,
       state
       |> init_modules(List.delete(@modules, Move))
-      |> Move.init(%{angle: angle()})
+      |> Move.init(%{angle: angle(), velocity: Enum.random(5..20) / 4.0})
     }
   end
 
@@ -110,6 +110,6 @@ defmodule Processor.Turtles.Smeller do
   end
 
   defp angle do
-    :rand.uniform() / 4.0 * Enum.random([-1.0, 1.0])
+    :rand.uniform() / 10.0 * Enum.random([-1.0, 1.0])
   end
 end

@@ -3,11 +3,13 @@ defmodule Processor.Arena.Birth do
   give birth to new turtles
   """
 
-  def init(state) do
+  @doc "adds birth_rate to creature state"
+  def init(state, opts \\ %{}) do
     state
-    |> Map.put(:birth_rate, 0.01)
+    |> Map.put(:birth_rate, opts[:birth_rate] || 0.01)
   end
 
+  @doc "creates a new creature if a birth occurs"
   def call(state) do
     if :rand.uniform() < state.birth_rate do
       state
@@ -17,6 +19,7 @@ defmodule Processor.Arena.Birth do
     end
   end
 
+  @doc "adds n new creatures to state"
   def hatch_n(state, count) do
     1..count
     |> Enum.reduce(state, fn _i, s ->
@@ -24,6 +27,7 @@ defmodule Processor.Arena.Birth do
     end)
   end
 
+  @doc "adds a new creature to state"
   def hatch(state) do
     {:ok, process} =
       DynamicSupervisor.start_child(TurtleSupervisor, {state.creature, state.count})

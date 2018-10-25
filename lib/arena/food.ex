@@ -11,7 +11,7 @@ defmodule Processor.Arena.Food do
   @food_quantity 4_000.0
 
   @doc "add food state variable to scene state"
-  def init(state) do
+  def init(state, opts \\ %{}) do
     {x, y} = coords()
 
     state
@@ -34,10 +34,10 @@ defmodule Processor.Arena.Food do
     move(state)
   end
 
-  @doc "there is still food, do nothing"
+  @doc "quantity is > 0, stay put"
   def move?(state), do: state
 
-  @doc "move the food and reset the amount of food"
+  @doc "move the food and reset the quantity of food"
   def move(state) do
     {x, y} = coords()
 
@@ -58,7 +58,7 @@ defmodule Processor.Arena.Food do
     |> circle(141,
       id: :food_glow,
       t: initial_coords,
-      fill: {:radial, {0, 0, 0, 141, {0xFF, 0xFF, 0x33, 0x20}, {0xFF, 0xFF, 0x33, 0x08}}}
+      fill: {:radial, {0, 0, 0, 141, {0xFF, 0xFF, 0x33, 0x40}, {0xFF, 0xFF, 0x33, 0x20}}}
     )
   end
 

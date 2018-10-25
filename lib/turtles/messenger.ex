@@ -91,29 +91,6 @@ defmodule Processor.Turtles.Messenger do
     %{state | color: :lime, ping_count: state.ping_count + 1, dirty: true}
   end
 
-  defp add(graph, state) do
-    graph
-    |> rrect({100, 60, 6},
-      id: button_id(),
-      fill: {:color, @off_color},
-      stroke: {4, :grey},
-      t: {state.x, state.y}
-    )
-    |> text(id(),
-      id: text_id(),
-      fill: {:color, :white},
-      t: {state.x + 10, state.y + 20},
-      font_size: 20
-    )
-    |> text("#{state.ping_count}",
-      id: count_id(),
-      fill: {:color, :white},
-      text_align: :center,
-      t: {state.x + 50, state.y + 50},
-      font_size: 40
-    )
-  end
-
   defp paint(graph, %{dirty: false}) do
     graph
   end
@@ -136,6 +113,29 @@ defmodule Processor.Turtles.Messenger do
 
   defp deliver(sibling, count) do
     Process.send_after(sibling, {:ping, count}, 50)
+  end
+
+  defp add(graph, state) do
+    graph
+    |> rrect({100, 60, 6},
+      id: button_id(),
+      fill: {:color, @off_color},
+      stroke: {4, :grey},
+      t: {state.x, state.y}
+    )
+    |> text(id(),
+      id: text_id(),
+      fill: {:color, :white},
+      t: {state.x + 10, state.y + 20},
+      font_size: 20
+    )
+    |> text("#{state.ping_count}",
+      id: count_id(),
+      fill: {:color, :white},
+      text_align: :center,
+      t: {state.x + 50, state.y + 50},
+      font_size: 40
+    )
   end
 
   defp button_id do

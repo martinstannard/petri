@@ -3,6 +3,7 @@ defmodule Processor.Scene.Panopticon do
 
   alias Scenic.Graph
 
+  import Utils.Modular
   import Scenic.Primitives
 
   alias Processor.Component.{ArenaUI, Nav}
@@ -39,7 +40,7 @@ defmodule Processor.Scene.Panopticon do
         graph: graph,
         count: 0
       }
-      |> init_modules()
+      |> init_modules(@modules)
 
     {:ok, state}
   end
@@ -73,7 +74,7 @@ defmodule Processor.Scene.Panopticon do
     |> Enum.each(&Seer.update(&1, state))
 
     state
-    |> call_modules()
+    |> call_modules(@modules)
     |> move_food()
     |> population
   end
@@ -104,20 +105,6 @@ defmodule Processor.Scene.Panopticon do
       |> Graph.modify(:population, &text(&1, "#{turtle_count()}"))
 
     %{state | graph: g}
-  end
-
-  def init_modules(state) do
-    @modules
-    |> Enum.reduce(state, fn m, s ->
-      s |> m.init
-    end)
-  end
-
-  def call_modules(state) do
-    @modules
-    |> Enum.reduce(state, fn m, s ->
-      s |> m.call
-    end)
   end
 
   def move_food(state) do

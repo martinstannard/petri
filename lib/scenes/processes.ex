@@ -12,6 +12,7 @@ defmodule Processor.Scene.Processes do
   alias Processor.Arena.Birth
 
   @animate_ms 16
+  @update_ms 2
   @graph Graph.build(font: :roboto, font_size: 14)
 
   def init(_, opts) do
@@ -24,29 +25,33 @@ defmodule Processor.Scene.Processes do
       |> ProcessorUI.add_to_graph(__MODULE__)
 
     {:ok, _} = :timer.send_interval(@animate_ms, :tick)
+    {:ok, _} = :timer.send_interval(@update_ms, :tock)
 
     state = %{
       creature: Messenger,
       viewport: viewport,
       graph: graph,
       count: 0,
-      ping_count: 0,
+      chain_length: 0,
       last_frame_time: Time.utc_now()
     }
 
-    {:ok, add_processes(56, state)}
+    {:ok, add_processes(7, state)}
   end
 
   def handle_info(:tick, state) do
-    {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
-    # elapsed = Time.diff(Time.utc_now(), state.last_frame_time, :millisecond)
-    send_ping(state.ping_count)
+    # {:message_queue_len, len} = :erlang.process_info(self(), :message_queue_len)
 
-    if len > 10 do
-      {:noreply, state}
-    else
-      {:noreply, draw(%{state | last_frame_time: Time.utc_now()})}
-    end
+    # if len > 10 do
+    #   {:noreply, state}
+    # else
+    {:noreply, draw(%{state | last_frame_time: Time.utc_now()})}
+    # end
+  end
+
+  def handle_info(:tock, state) do
+    send_ping(state.chain_length)
+    {:noreply, state}
   end
 
   def handle_info(_, state) do
@@ -54,7 +59,7 @@ defmodule Processor.Scene.Processes do
   end
 
   def filter_event({:click, :btn_ten}, _, state) do
-    {:stop, add_processes(10, state)}
+    {:stop, add_processes(7, state)}
   end
 
   def filter_event({:click, :ping}, _, state) do
@@ -67,8 +72,8 @@ defmodule Processor.Scene.Processes do
     {:stop, state}
   end
 
-  def filter_event({:value_changed, :ping_count, count}, _, state) do
-    {:stop, %{state | ping_count: count}}
+  def filter_event({:value_changed, :chain_length, count}, _, state) do
+    {:stop, %{state | chain_length: count}}
   end
 
   def filter_event({:click, id}, _, state) when is_pid(id) do

@@ -3,7 +3,7 @@ defmodule Processor.Turtles.Behaviour.Scale do
   scales a turtle based on tick and some state
   """
 
-  def init(state) do
+  def init(state, opts \\ %{}) do
     state
     |> Map.put(:scale, 1.0)
     |> Map.put(:scale_speed, Enum.random(4..50))

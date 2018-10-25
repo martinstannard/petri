@@ -5,7 +5,7 @@ defmodule Processor.Turtles.Behaviour.Health do
 
   @max_health 1000
 
-  def init(state) do
+  def init(state, opts \\ %{}) do
     state
     |> Map.put(:age, 0)
     |> Map.put(:health, @max_health)

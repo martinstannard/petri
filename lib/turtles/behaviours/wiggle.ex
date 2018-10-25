@@ -3,12 +3,12 @@ defmodule Processor.Turtles.Behaviour.Wiggle do
   wiggles the heading slightly each move
   """
 
-  def init(state) do
+  def init(state, opts \\ %{}) do
     state
   end
 
   def call(state, _) do
-    wiggle = state.angle * :rand.uniform() / 3.0
+    wiggle = state.angle * :rand.uniform() / 3.0 * Enum.random([1.0, -1.0])
 
     %{
       state
