@@ -40,16 +40,11 @@ defmodule Processor.Scene.Walking do
   def init(_, opts) do
     Supervisor.clear()
 
-    # {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
-    #   opts[:viewport]
-    #   |> ViewPort.info()
-
     graph =
       @graph
       |> Nav.add_to_graph(__MODULE__)
       |> WalkingUI.add_to_graph(__MODULE__)
 
-    # start a very simple animation timer
     {:ok, _} = :timer.send_interval(@animate_ms, :animate)
     {:ok, _} = :timer.send_interval(@update_ms, :update)
 
