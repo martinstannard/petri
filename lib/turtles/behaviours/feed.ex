@@ -7,7 +7,7 @@ defmodule Processor.Turtles.Behaviour.Feed do
   @max_distance 20_000.0
 
   @doc "add food variables to creature state"
-  def init(state, opts \\ %{}) do
+  def init(state, _opts \\ %{}) do
     state
     |> Map.put(:food_distance, @max_distance)
     |> Map.put(:food_delta, 0.0)

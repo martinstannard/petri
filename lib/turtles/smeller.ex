@@ -8,7 +8,6 @@ defmodule Processor.Turtles.Smeller do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Turtles.Utils
   alias Processor.Turtles.Behaviour.{Feed, Health, Move, Smell, Wiggle}
 
   @max_health 1000

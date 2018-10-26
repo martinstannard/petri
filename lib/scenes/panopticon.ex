@@ -6,11 +6,12 @@ defmodule Processor.Scene.Panopticon do
   import Utils.Modular
   import Scenic.Primitives
 
-  alias Processor.Component.{ArenaUI, Nav}
+  alias Processor.Component.{SmellyUI, Nav}
   alias Processor.Turtles.{Supervisor, Seer}
   alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16
+  @modules [Birth, Reaper, Food]
 
   @graph Graph.build(font: :roboto, font_size: 24)
          |> text("0",
@@ -18,7 +19,6 @@ defmodule Processor.Scene.Panopticon do
            translate: {20, 750},
            font_size: 64
          )
-  @modules [Birth, Reaper, Food]
 
   def init(_, opts) do
     Supervisor.clear()
@@ -27,7 +27,7 @@ defmodule Processor.Scene.Panopticon do
     graph =
       @graph
       |> Nav.add_to_graph(__MODULE__)
-      |> ArenaUI.add_to_graph(__MODULE__)
+      |> SmellyUI.add_to_graph(__MODULE__)
       |> Food.add()
       |> push_graph()
 

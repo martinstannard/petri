@@ -11,7 +11,7 @@ config :processor, :viewport, %{
     %{
       module: Scenic.Driver.Glfw,
       name: :glfw,
-      opts: [resizeable: false, title: "Arena"]
+      opts: [resizeable: false, title: "Petri"]
     }
   ]
 }
