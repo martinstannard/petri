@@ -9,7 +9,7 @@ defmodule Processor.Scene.Walking do
   alias Scenic.ViewPort
   alias Processor.Component.{Nav, WalkingUI}
   alias Processor.Turtles.{Supervisor, Walker}
-  alias Processor.Arena.{Birth, Reaper}
+  alias Processor.Scenes.Behaviours.{Birth, Reaper}
 
   @animate_ms 30
   @update_ms 30

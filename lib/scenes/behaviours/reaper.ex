@@ -1,4 +1,4 @@
-defmodule Processor.Arena.Reaper do
+defmodule Processor.Scenes.Behaviours.Reaper do
   alias Scenic.Graph
 
   alias Processor.Turtles.Supervisor

@@ -9,7 +9,7 @@ defmodule Processor.Scene.Processes do
 
   alias Processor.Turtles.{Messenger, Supervisor}
 
-  alias Processor.Arena.Birth
+  alias Processor.Scenes.Behaviours.Birth
 
   @animate_ms 16
   @update_ms 2

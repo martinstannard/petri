@@ -1,4 +1,4 @@
-defmodule Processor.Arena.Food do
+defmodule Processor.Scenes.Behaviours.Food do
   alias Scenic.Graph
   alias Processor.Turtles.Supervisor
   import Scenic.Primitives, only: [{:circle, 3}, {:update_opts, 2}]

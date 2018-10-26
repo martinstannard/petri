@@ -1,4 +1,4 @@
-defmodule Processor.Arena.Birth do
+defmodule Processor.Scenes.Behaviours.Birth do
   @moduledoc """
   give birth to new turtles
   """

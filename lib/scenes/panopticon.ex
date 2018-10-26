@@ -8,7 +8,7 @@ defmodule Processor.Scene.Panopticon do
 
   alias Processor.Component.{ArenaUI, Nav}
   alias Processor.Turtles.{Supervisor, Seer}
-  alias Processor.Arena.{Birth, Food, Reaper}
+  alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16
 
