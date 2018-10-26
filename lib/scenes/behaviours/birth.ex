@@ -30,7 +30,7 @@ defmodule Processor.Scenes.Behaviours.Birth do
   @doc "adds a new creature to state"
   def hatch(state) do
     {:ok, process} =
-      DynamicSupervisor.start_child(TurtleSupervisor, {state.creature, state.count})
+      DynamicSupervisor.start_child(CreatureSupervisor, {state.creature, state.count})
 
     %{
       state

@@ -1,6 +1,6 @@
 defmodule Processor.Creatures.Supervisor do
   def children do
-    TurtleSupervisor
+    CreatureSupervisor
     |> DynamicSupervisor.which_children()
     |> Enum.map(fn t ->
       {_, pid, _, _} = t
@@ -9,7 +9,7 @@ defmodule Processor.Creatures.Supervisor do
   end
 
   def count do
-    TurtleSupervisor
+    CreatureSupervisor
     |> DynamicSupervisor.which_children()
     |> length
   end
@@ -17,12 +17,12 @@ defmodule Processor.Creatures.Supervisor do
   def clear do
     children()
     |> Enum.each(fn turtle ->
-      DynamicSupervisor.terminate_child(TurtleSupervisor, turtle)
+      DynamicSupervisor.terminate_child(CreatureSupervisor, turtle)
     end)
   end
 
   def terminate(pid) do
-    DynamicSupervisor.terminate_child(TurtleSupervisor, pid)
+    DynamicSupervisor.terminate_child(CreatureSupervisor, pid)
   end
 
   def apply(func) do

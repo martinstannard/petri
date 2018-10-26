@@ -1,4 +1,9 @@
 defmodule Processor.Scene.Smelly do
+
+  @moduledoc """
+  A scene for displaying Smellers
+  """
+
   use Scenic.Scene
 
   alias Scenic.Graph

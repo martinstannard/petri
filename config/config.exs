@@ -6,7 +6,7 @@ use Mix.Config
 config :processor, :viewport, %{
   name: :main_viewport,
   size: {800, 800},
-  default_scene: {Processor.Scene.Panopticon, nil},
+  default_scene: {Processor.Scene.Sensor, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,

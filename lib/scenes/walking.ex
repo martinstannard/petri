@@ -1,4 +1,9 @@
 defmodule Processor.Scene.Walking do
+
+  @moduledoc """
+  A scene for displaying Walkers
+  """
+
   use Scenic.Scene
 
   import Utils.Modular

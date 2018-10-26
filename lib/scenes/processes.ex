@@ -1,18 +1,20 @@
 defmodule Processor.Scene.Processes do
+  @moduledoc """
+  A scene for displaying Processes
+  """
+
   use Scenic.Scene
 
   import Scenic.Primitives
 
   alias Scenic.Graph
-
   alias Processor.Component.{ProcessorUI, Nav}
-
   alias Processor.Creatures.{Messenger, Supervisor}
-
   alias Processor.Scenes.Behaviours.Birth
 
   @animate_ms 16
   @update_ms 2
+
   @graph Graph.build(font: :roboto, font_size: 14)
 
   def init(_, opts) do
