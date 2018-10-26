@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Behaviour.Smell do
+defmodule Processor.Creatures.Behaviour.Smell do
   @moduledoc """
   allow a turtle to smell food
   """

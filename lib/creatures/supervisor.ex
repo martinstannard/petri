@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Supervisor do
+defmodule Processor.Creatures.Supervisor do
   def children do
     TurtleSupervisor
     |> DynamicSupervisor.which_children()

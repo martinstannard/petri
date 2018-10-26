@@ -1,8 +1,8 @@
-defmodule Processor.Turtles.Walker do
+defmodule Processor.Creatures.Walker do
   use GenServer
 
   alias Scenic.Graph
-  alias Processor.Turtles.Utils
+  alias Processor.Creatures.Utils
 
   import Scenic.Primitives
 

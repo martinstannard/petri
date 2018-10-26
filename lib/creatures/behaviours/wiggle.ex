@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Behaviour.Wiggle do
+defmodule Processor.Creatures.Behaviour.Wiggle do
   @moduledoc """
   wiggles the heading slightly each move
   """

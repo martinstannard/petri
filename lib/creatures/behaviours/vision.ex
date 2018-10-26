@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Behaviour.Vision do
+defmodule Processor.Creatures.Behaviour.Vision do
   @moduledoc """
   models vision
   """

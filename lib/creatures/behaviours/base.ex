@@ -1,5 +1,5 @@
-defmodule Processor.Turtles.Behaviour.Base do
-  alias Processor.Turtles.Utils
+defmodule Processor.Creatures.Behaviour.Base do
+  alias Processor.Creatures.Utils
 
   @moduledoc """
   base functionality

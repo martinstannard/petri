@@ -1,6 +1,6 @@
-defmodule Processor.Turtles.Smeller do
+defmodule Processor.Creatures.Seer do
   @moduledoc """
-  a creature that uses smell to find food
+  Implements a turtle with vision
   """
   use GenServer
 
@@ -8,11 +8,10 @@ defmodule Processor.Turtles.Smeller do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Turtles.Behaviour.{Feed, Health, Move, Smell, Wiggle}
+  alias Processor.Creatures.Behaviour.{Feed, Health, Move, Vision}
 
-  @max_health 1000
   @tri {{0, -15}, {8, 8}, {-8, 8}}
-  @modules [Feed, Health, Smell, Move, Wiggle]
+  @modules [Health, Feed, Vision, Move]
 
   def start_link(id) do
     GenServer.start_link(__MODULE__, id)
@@ -43,25 +42,15 @@ defmodule Processor.Turtles.Smeller do
   end
 
   def init(id) do
-    state = %{
-      id: id,
-      tick: 0
-    }
-
     {
       :ok,
-      state
-      |> init_modules(List.delete(@modules, Move))
-      |> Move.init(%{angle: angle(), velocity: Enum.random(5..20) / 4.0})
+      %{id: id}
+      |> init_modules(@modules)
     }
   end
 
   def handle_cast({:update, world}, state) do
-    new_state =
-      state
-      |> call_modules(@modules, world)
-
-    {:noreply, new_state}
+    {:noreply, state |> call_modules(@modules, world)}
   end
 
   def handle_call({:draw, graph}, _, state) do
@@ -91,7 +80,7 @@ defmodule Processor.Turtles.Smeller do
       &update_opts(&1,
         translate: {state.x, state.y},
         rotate: state.heading,
-        fill: {:color, health_colour(state.health)}
+        fill: {:color, state.color}
       )
     )
   end
@@ -99,16 +88,5 @@ defmodule Processor.Turtles.Smeller do
   defp add(graph, state) do
     graph
     |> triangle(@tri, id: state.id)
-  end
-
-  defp health_colour(health) do
-    percentage = health / @max_health
-    r = round(255.0 * (1.0 - percentage))
-    g = round(255.0 * percentage)
-    {r, g, 0x22}
-  end
-
-  defp angle do
-    :rand.uniform() / 10.0 * Enum.random([-1.0, 1.0])
   end
 end

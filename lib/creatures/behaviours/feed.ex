@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Behaviour.Feed do
+defmodule Processor.Creatures.Behaviour.Feed do
   @moduledoc """
   functionality to feed from a food source(s)
   calculates distance to food, and adds health if close enough

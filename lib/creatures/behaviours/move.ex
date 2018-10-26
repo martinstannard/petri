@@ -1,4 +1,4 @@
-defmodule Processor.Turtles.Behaviour.Move do
+defmodule Processor.Creatures.Behaviour.Move do
   @moduledoc """
   implements movement and turning
   """

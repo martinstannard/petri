@@ -1,11 +1,11 @@
-defmodule Processor.Turtles.Messenger do
+defmodule Processor.Creatures.Messenger do
   @moduledoc """
   A simple representation of a process
   """
   use GenServer
 
   alias Scenic.Graph
-  alias Processor.Turtles.Supervisor
+  alias Processor.Creatures.Supervisor
 
   import Scenic.Primitives, only: [{:text, 2}, {:text, 3}, {:rrect, 3}, {:update_opts, 2}]
 

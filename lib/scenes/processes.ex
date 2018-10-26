@@ -7,7 +7,7 @@ defmodule Processor.Scene.Processes do
 
   alias Processor.Component.{ProcessorUI, Nav}
 
-  alias Processor.Turtles.{Messenger, Supervisor}
+  alias Processor.Creatures.{Messenger, Supervisor}
 
   alias Processor.Scenes.Behaviours.Birth
 

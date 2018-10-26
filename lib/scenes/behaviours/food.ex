@@ -1,6 +1,6 @@
 defmodule Processor.Scenes.Behaviours.Food do
   alias Scenic.Graph
-  alias Processor.Turtles.Supervisor
+  alias Processor.Creatures.Supervisor
   import Scenic.Primitives, only: [{:circle, 3}, {:update_opts, 2}]
 
   @moduledoc """
@@ -79,7 +79,7 @@ defmodule Processor.Scenes.Behaviours.Food do
   end
 
   defp consumed do
-    Supervisor.apply(&Processor.Turtles.Smeller.state/1)
+    Supervisor.apply(&Processor.Creatures.Smeller.state/1)
     |> Enum.map(&Map.get(&1, :eaten))
     |> Enum.sum()
   end

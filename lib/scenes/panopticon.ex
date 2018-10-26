@@ -7,7 +7,7 @@ defmodule Processor.Scene.Panopticon do
   import Scenic.Primitives
 
   alias Processor.Component.{SmellyUI, Nav}
-  alias Processor.Turtles.{Supervisor, Seer}
+  alias Processor.Creatures.{Supervisor, Seer}
   alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16

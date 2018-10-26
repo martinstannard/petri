@@ -7,7 +7,7 @@ defmodule Processor.Scene.Smelly do
   import Scenic.Primitives
 
   alias Processor.Component.{SmellyUI, Nav}
-  alias Processor.Turtles.{Supervisor, Smeller}
+  alias Processor.Creatures.{Supervisor, Smeller}
   alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16
