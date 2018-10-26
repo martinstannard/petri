@@ -5,8 +5,6 @@ defmodule Processor.Scene.Processes do
 
   use Scenic.Scene
 
-  import Scenic.Primitives
-
   alias Scenic.Graph
   alias Processor.Component.{ProcessorUI, Nav}
   alias Processor.Creatures.{Messenger, Supervisor}

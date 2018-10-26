@@ -3,7 +3,7 @@ defmodule Processor.Creatures.Behaviour.Smell do
   allow a turtle to smell food
   """
 
-  def init(state, opts \\ %{}) do
+  def init(state, _opts \\ %{}) do
     state
   end
 
