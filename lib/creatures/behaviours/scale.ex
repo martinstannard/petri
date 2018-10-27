@@ -1,6 +1,6 @@
 defmodule Petri.Creatures.Behaviour.Scale do
   @moduledoc """
-  scales a turtle based on tick and some state
+  scales a creature based on tick and some state
   """
 
   def init(state, opts \\ %{}) do

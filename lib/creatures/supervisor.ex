@@ -1,4 +1,9 @@
 defmodule Petri.Creatures.Supervisor do
+  @moduledoc """
+  a wrapper that provides helper functions for dealing
+  with DynamicSupervisor
+  """
+
   def children do
     CreatureSupervisor
     |> DynamicSupervisor.which_children()
@@ -16,8 +21,8 @@ defmodule Petri.Creatures.Supervisor do
 
   def clear do
     children()
-    |> Enum.each(fn turtle ->
-      DynamicSupervisor.terminate_child(CreatureSupervisor, turtle)
+    |> Enum.each(fn creature ->
+      DynamicSupervisor.terminate_child(CreatureSupervisor, creature)
     end)
   end
 

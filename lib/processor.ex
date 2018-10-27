@@ -13,7 +13,6 @@ defmodule Petri do
     children = [
       supervisor(Petri.Sensor.Supervisor, []),
       {DynamicSupervisor, name: CreatureSupervisor, strategy: :one_for_one},
-      # supervisor(Petri.Turtle.Supervisor, []),
       supervisor(Scenic, viewports: [main_viewport_config])
     ]
 

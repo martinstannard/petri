@@ -1,6 +1,6 @@
 defmodule Petri.Creatures.Behaviour.Smell do
   @moduledoc """
-  allow a turtle to smell food
+  allow a creature to smell food
   """
 
   def init(state, _opts \\ %{}) do

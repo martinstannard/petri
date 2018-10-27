@@ -1,6 +1,6 @@
 defmodule Petri.Scenes.Behaviours.Birth do
   @moduledoc """
-  give birth to new turtles
+  give birth to new creatures
   """
 
   @doc "adds birth_rate to creature state"
