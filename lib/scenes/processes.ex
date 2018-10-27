@@ -38,7 +38,7 @@ defmodule Processor.Scene.Processes do
         viewport: viewport,
         graph: graph,
         count: 0,
-        chain_length: 0,
+        chain_length: 1,
         last_frame_time: Time.utc_now()
       }
       |> Pause.init(%{})

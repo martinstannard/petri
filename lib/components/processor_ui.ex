@@ -34,7 +34,7 @@ defmodule Processor.Component.ProcessorUI do
         theme: :secondary,
         translate: {vp_width - 100, @font_size * 2}
       )
-      |> slider({{0, 20}, 0},
+      |> slider({{1, 20}, 1},
         id: :chain_length,
         translate: {vp_width - 700, @font_size * 2 + 10}
       )
