@@ -1,17 +1,20 @@
 defmodule Processor.Creatures.Behaviour.Vision do
   @moduledoc """
-  models vision
+  models bifocal vision
+  Each eye has a width and offset from straight ahead
+  If the bearing to an object falls within the arc of the eye, then
+  the eye can 'see' the object
   """
   @twopi 2.0 * :math.pi()
 
   def init(state, _opts \\ %{}) do
-      state
-      |> Map.put(:eye_width, :rand.uniform() * :math.pi())
-      |> Map.put(:eye_offset, :rand.uniform() * :math.pi())
+    state
+    |> Map.put(:eye_width, :rand.uniform() * :math.pi())
+    |> Map.put(:eye_offset, :rand.uniform() * :math.pi())
   end
 
   def call(state, world) do
-    %{state | heading: state.heading + angle(state, world)}
+    %{state | heading: clamp(state.heading + angle(state, world))}
   end
 
   def angle(state, world) do
@@ -39,23 +42,11 @@ defmodule Processor.Creatures.Behaviour.Vision do
   end
 
   def eye_sees(ls, rs, bearing) when ls < rs do
-    cond do
-      bearing < rs and bearing > ls ->
-        true
-
-      true ->
-        false
-    end
+    bearing < rs and bearing > ls
   end
 
   def eye_sees(ls, rs, bearing) do
-    cond do
-      bearing < rs or bearing > ls ->
-        true
-
-      true ->
-        false
-    end
+    bearing < rs or bearing > ls
   end
 
   def bearing(px, py, state) do
