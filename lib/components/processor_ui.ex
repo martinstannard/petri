@@ -4,7 +4,7 @@ defmodule Processor.Component.ProcessorUI do
   alias Scenic.ViewPort
   alias Scenic.Graph
 
-  # import Scenic.Primitives, only: [{:text, 3}]
+  import Scenic.Primitives, only: [{:text, 3}]
   import Scenic.Components
 
   @height 110
@@ -27,15 +27,10 @@ defmodule Processor.Component.ProcessorUI do
       |> button("Ping",
         id: :ping,
         theme: :secondary,
-        translate: {vp_width - 300, @font_size * 2}
-      )
-      |> button("Multiping",
-        id: :multiping,
-        theme: :secondary,
         translate: {vp_width - 200, @font_size * 2}
       )
       |> button("Add Row",
-        id: :btn_ten,
+        id: :btn_row,
         theme: :secondary,
         translate: {vp_width - 100, @font_size * 2}
       )
