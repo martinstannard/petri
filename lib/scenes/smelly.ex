@@ -1,5 +1,4 @@
-defmodule Processor.Scene.Smelly do
-
+defmodule Petri.Scene.Smelly do
   @moduledoc """
   A scene for displaying Smellers
   """
@@ -11,9 +10,9 @@ defmodule Processor.Scene.Smelly do
   import Utils.Modular
   import Scenic.Primitives
 
-  alias Processor.Component.{SmellyUI, Nav}
-  alias Processor.Creatures.{Supervisor, Smeller}
-  alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
+  alias Petri.Component.{SmellyUI, Nav}
+  alias Petri.Creatures.{Supervisor, Smeller}
+  alias Petri.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16
   @modules [Food, Reaper, Birth]

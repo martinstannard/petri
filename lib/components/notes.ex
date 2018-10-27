@@ -1,4 +1,4 @@
-defmodule Processor.Component.Notes do
+defmodule Petri.Component.Notes do
   use Scenic.Component
 
   alias Scenic.ViewPort

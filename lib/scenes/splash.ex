@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Splash do
+defmodule Petri.Scene.Splash do
   @moduledoc """
   Sample splash scene.
 

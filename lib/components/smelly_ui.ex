@@ -1,4 +1,4 @@
-defmodule Processor.Component.SmellyUI do
+defmodule Petri.Component.SmellyUI do
   use Scenic.Component
 
   alias Scenic.ViewPort

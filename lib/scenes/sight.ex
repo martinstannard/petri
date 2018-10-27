@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Sight do
+defmodule Petri.Scene.Sight do
   @moduledoc """
   A scene for displaying Seers
   """
@@ -9,9 +9,9 @@ defmodule Processor.Scene.Sight do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Component.{SmellyUI, Nav}
-  alias Processor.Creatures.{Supervisor, Seer}
-  alias Processor.Scenes.Behaviours.{Birth, Food, Reaper}
+  alias Petri.Component.{SmellyUI, Nav}
+  alias Petri.Creatures.{Supervisor, Seer}
+  alias Petri.Scenes.Behaviours.{Birth, Food, Reaper}
 
   @animate_ms 16
   @modules [Birth, Reaper, Food]

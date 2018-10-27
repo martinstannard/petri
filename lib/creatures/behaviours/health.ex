@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Behaviour.Health do
+defmodule Petri.Creatures.Behaviour.Health do
   @moduledoc """
   adds health to a creature
   """

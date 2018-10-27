@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Supervisor do
+defmodule Petri.Creatures.Supervisor do
   def children do
     CreatureSupervisor
     |> DynamicSupervisor.which_children()

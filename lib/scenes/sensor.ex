@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Sensor do
+defmodule Petri.Scene.Sensor do
   use Scenic.Scene
 
   alias Scenic.Graph
@@ -8,8 +8,8 @@ defmodule Processor.Scene.Sensor do
   import Scenic.Primitives
   import Scenic.Components
 
-  alias Processor.Component.Nav
-  alias Processor.Component.Notes
+  alias Petri.Component.Nav
+  alias Petri.Component.Notes
 
   @body_offset 80
   @font_size 160

@@ -1,4 +1,4 @@
-defmodule Processor.Component.Nav do
+defmodule Petri.Component.Nav do
   use Scenic.Component
 
   alias Scenic.ViewPort
@@ -32,14 +32,14 @@ defmodule Processor.Component.Nav do
       |> text("Scene:", translate: {14, 35}, align: :right)
       |> dropdown(
         {[
-           {"Sensor", Processor.Scene.Sensor},
-           {"Primitives", Processor.Scene.Primitives},
-           {"Components", Processor.Scene.Components},
-           {"Transforms", Processor.Scene.Transforms},
-           {"Processes", Processor.Scene.Processes},
-           {"Movement", Processor.Scene.Walking},
-           {"Smell", Processor.Scene.Smelly},
-           {"Sight", Processor.Scene.Sight}
+           {"Sensor", Petri.Scene.Sensor},
+           {"Primitives", Petri.Scene.Primitives},
+           {"Components", Petri.Scene.Components},
+           {"Transforms", Petri.Scene.Transforms},
+           {"Processes", Petri.Scene.Processes},
+           {"Movement", Petri.Scene.Walking},
+           {"Smell", Petri.Scene.Smelly},
+           {"Sight", Petri.Scene.Sight}
          ], current_scene},
         id: :nav,
         translate: {70, 15}

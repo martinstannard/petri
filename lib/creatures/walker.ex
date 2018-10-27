@@ -1,8 +1,8 @@
-defmodule Processor.Creatures.Walker do
+defmodule Petri.Creatures.Walker do
   use GenServer
 
   alias Scenic.Graph
-  alias Processor.Creatures.Utils
+  alias Petri.Creatures.Utils
 
   import Scenic.Primitives
 

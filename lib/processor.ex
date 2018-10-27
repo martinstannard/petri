@@ -1,4 +1,4 @@
-defmodule Processor do
+defmodule Petri do
   @moduledoc """
   Starter application using the Scenic framework.
   """
@@ -11,9 +11,9 @@ defmodule Processor do
 
     # start the application with the viewport
     children = [
-      supervisor(Processor.Sensor.Supervisor, []),
+      supervisor(Petri.Sensor.Supervisor, []),
       {DynamicSupervisor, name: CreatureSupervisor, strategy: :one_for_one},
-      # supervisor(Processor.Turtle.Supervisor, []),
+      # supervisor(Petri.Turtle.Supervisor, []),
       supervisor(Scenic, viewports: [main_viewport_config])
     ]
 

@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Smeller do
+defmodule Petri.Creatures.Smeller do
   @moduledoc """
   a creature that uses smell to find food
   """
@@ -8,7 +8,7 @@ defmodule Processor.Creatures.Smeller do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Creatures.Behaviour.{Feed, Health, Move, Smell, Wiggle}
+  alias Petri.Creatures.Behaviour.{Feed, Health, Move, Smell, Wiggle}
 
   @max_health 1000
   @tri {{0, -15}, {8, 8}, {-8, 8}}

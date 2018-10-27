@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Primitives do
+defmodule Petri.Scene.Primitives do
   @moduledoc """
   Sample scene.
   """
@@ -7,8 +7,8 @@ defmodule Processor.Scene.Primitives do
   alias Scenic.Graph
   import Scenic.Primitives
 
-  alias Processor.Component.Nav
-  alias Processor.Component.Notes
+  alias Petri.Component.Nav
+  alias Petri.Component.Notes
 
   @bird_path :code.priv_dir(:processor)
              |> Path.join("/static/images/cyanoramphus_zealandicus_1849.jpg")

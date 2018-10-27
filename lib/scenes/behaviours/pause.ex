@@ -1,4 +1,4 @@
-defmodule Processor.Scenes.Behaviours.Pause do
+defmodule Petri.Scenes.Behaviours.Pause do
   @moduledoc """
   stops updates and hence 'pauses' the scene
   """

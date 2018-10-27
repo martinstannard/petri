@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Utils do
+defmodule Petri.Creatures.Utils do
   def random_color do
     colors() |> Enum.random()
   end

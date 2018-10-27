@@ -1,10 +1,10 @@
 # a simple supervisor that starts up the Scenic.SensorPubSub server
 # and any set of other sensor processes
 
-defmodule Processor.Sensor.Supervisor do
+defmodule Petri.Sensor.Supervisor do
   use Supervisor
 
-  alias Processor.Sensor.Temperature
+  alias Petri.Sensor.Temperature
 
   def start_link() do
     Supervisor.start_link(__MODULE__, :ok)

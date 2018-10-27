@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Behaviour.Count do
+defmodule Petri.Creatures.Behaviour.Count do
   @moduledoc """
   adds a count member to a creature's state
   """

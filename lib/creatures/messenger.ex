@@ -1,12 +1,12 @@
-defmodule Processor.Creatures.Messenger do
+defmodule Petri.Creatures.Messenger do
   @moduledoc """
   A simple representation of a process
   """
   use GenServer
 
   alias Scenic.Graph
-  alias Processor.Creatures.Supervisor
-  alias Processor.Creatures.Behaviour.Count
+  alias Petri.Creatures.Supervisor
+  alias Petri.Creatures.Behaviour.Count
 
   import Scenic.Primitives, only: [{:text, 2}, {:text, 3}, {:rrect, 3}, {:update_opts, 2}]
 

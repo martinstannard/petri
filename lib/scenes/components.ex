@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Components do
+defmodule Petri.Scene.Components do
   @moduledoc """
   Sample scene.
   """
@@ -8,8 +8,8 @@ defmodule Processor.Scene.Components do
   import Scenic.Primitives
   import Scenic.Components
 
-  alias Processor.Component.Nav
-  alias Processor.Component.Notes
+  alias Petri.Component.Nav
+  alias Petri.Component.Notes
 
   @body_offset 60
 

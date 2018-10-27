@@ -1,4 +1,4 @@
-defmodule Processor.MixProject do
+defmodule Petri.MixProject do
   use Mix.Project
 
   def project do
@@ -15,7 +15,7 @@ defmodule Processor.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {Processor, []},
+      mod: {Petri, []},
       extra_applications: []
     ]
   end

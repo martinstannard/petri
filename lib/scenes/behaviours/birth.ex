@@ -1,4 +1,4 @@
-defmodule Processor.Scenes.Behaviours.Birth do
+defmodule Petri.Scenes.Behaviours.Birth do
   @moduledoc """
   give birth to new turtles
   """

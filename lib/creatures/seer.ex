@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Seer do
+defmodule Petri.Creatures.Seer do
   @moduledoc """
   Implements a turtle with vision
   """
@@ -8,7 +8,7 @@ defmodule Processor.Creatures.Seer do
   import Scenic.Primitives
 
   alias Scenic.Graph
-  alias Processor.Creatures.Behaviour.{Feed, Health, Move, Vision}
+  alias Petri.Creatures.Behaviour.{Feed, Health, Move, Vision}
 
   @tri {{0, -15}, {8, 8}, {-8, 8}}
   @modules [Health, Feed, Vision, Move]

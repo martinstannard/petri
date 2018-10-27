@@ -1,7 +1,7 @@
-defmodule Processor.Scenes.Behaviours.Reaper do
+defmodule Petri.Scenes.Behaviours.Reaper do
   alias Scenic.Graph
 
-  alias Processor.Creatures.Supervisor
+  alias Petri.Creatures.Supervisor
 
   @moduledoc """
   remove dead creatures

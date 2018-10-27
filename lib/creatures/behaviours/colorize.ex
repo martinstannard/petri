@@ -1,9 +1,9 @@
-defmodule Processor.Creatures.Behaviour.Colorize do
+defmodule Petri.Creatures.Behaviour.Colorize do
   @moduledoc """
   changes a turtle's color
   """
 
-  alias Processor.Creatures.Utils
+  alias Petri.Creatures.Utils
 
   def init(state, _opts \\ %{}) do
     state

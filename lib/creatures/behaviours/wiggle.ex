@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Behaviour.Wiggle do
+defmodule Petri.Creatures.Behaviour.Wiggle do
   @moduledoc """
   wiggles the heading slightly each move
   """

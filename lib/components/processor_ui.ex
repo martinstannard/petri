@@ -1,4 +1,4 @@
-defmodule Processor.Component.ProcessorUI do
+defmodule Petri.Component.PetriUI do
   use Scenic.Component
 
   alias Scenic.ViewPort

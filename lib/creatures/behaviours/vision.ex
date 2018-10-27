@@ -1,4 +1,4 @@
-defmodule Processor.Creatures.Behaviour.Vision do
+defmodule Petri.Creatures.Behaviour.Vision do
   @moduledoc """
   models bifocal vision
   Each eye has a width and offset from straight ahead

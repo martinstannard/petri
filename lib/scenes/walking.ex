@@ -1,5 +1,4 @@
-defmodule Processor.Scene.Walking do
-
+defmodule Petri.Scene.Walking do
   @moduledoc """
   A scene for displaying Walkers
   """
@@ -12,9 +11,9 @@ defmodule Processor.Scene.Walking do
 
   alias Scenic.Graph
   alias Scenic.ViewPort
-  alias Processor.Component.{Nav, WalkingUI}
-  alias Processor.Creatures.{Supervisor, Walker}
-  alias Processor.Scenes.Behaviours.{Birth, Reaper}
+  alias Petri.Component.{Nav, WalkingUI}
+  alias Petri.Creatures.{Supervisor, Walker}
+  alias Petri.Scenes.Behaviours.{Birth, Reaper}
 
   @animate_ms 30
   @update_ms 30

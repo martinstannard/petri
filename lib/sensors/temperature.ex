@@ -1,7 +1,7 @@
 # this is a SIMULATED temperature sensor
 # it pretends to get a temperature and sets it into the sensor cache.
 
-defmodule Processor.Sensor.Temperature do
+defmodule Petri.Sensor.Temperature do
   use GenServer
 
   alias Scenic.Sensor

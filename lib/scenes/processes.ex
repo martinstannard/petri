@@ -1,4 +1,4 @@
-defmodule Processor.Scene.Processes do
+defmodule Petri.Scene.Processes do
   @moduledoc """
   A scene for displaying Processes
   """
@@ -6,9 +6,9 @@ defmodule Processor.Scene.Processes do
   use Scenic.Scene
   import Scenic.Primitives, only: [{:text, 2}, {:text, 3}, {:rrect, 3}, {:update_opts, 2}]
   alias Scenic.Graph
-  alias Processor.Component.{ProcessorUI, Nav}
-  alias Processor.Creatures.{Messenger, Supervisor}
-  alias Processor.Scenes.Behaviours.{Birth, Pause}
+  alias Petri.Component.{PetriUI, Nav}
+  alias Petri.Creatures.{Messenger, Supervisor}
+  alias Petri.Scenes.Behaviours.{Birth, Pause}
 
   @animate_ms 16
   @update_ms 2
@@ -27,10 +27,10 @@ defmodule Processor.Scene.Processes do
     graph =
       @graph
       |> Nav.add_to_graph(__MODULE__)
-      |> ProcessorUI.add_to_graph(__MODULE__)
+      |> PetriUI.add_to_graph(__MODULE__)
 
-    {:ok, _} = :timer.send_interval(@animate_ms, :tick)
-    {:ok, _} = :timer.send_interval(@update_ms, :tock)
+    {:ok, _} = :timer.send_interval(@animate_ms, :animate)
+    {:ok, _} = :timer.send_interval(@update_ms, :update)
 
     state =
       %{
@@ -46,15 +46,15 @@ defmodule Processor.Scene.Processes do
     {:ok, add_processes(7, state)}
   end
 
-  def handle_info(:tick, state) do
+  def handle_info(:animate, state) do
     {:noreply, draw(%{state | last_frame_time: Time.utc_now()})}
   end
 
-  def handle_info(:tock, %{paused: true} = state) do
+  def handle_info(:update, %{paused: true} = state) do
     {:noreply, state}
   end
 
-  def handle_info(:tock, state) do
+  def handle_info(:update, state) do
     send_ping(state.chain_length)
     {:noreply, state}
   end

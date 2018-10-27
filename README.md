@@ -1,4 +1,4 @@
-# Processor
+# Petri
 
 Some experimentation using Scenic to visualise Elixir Processes
 

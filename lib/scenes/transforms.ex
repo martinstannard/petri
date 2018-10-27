@@ -1,12 +1,12 @@
-defmodule Processor.Scene.Transforms do
+defmodule Petri.Scene.Transforms do
   use Scenic.Scene
   alias Scenic.Graph
 
   import Scenic.Primitives
   import Scenic.Components
 
-  alias Processor.Component.Nav
-  alias Processor.Component.Notes
+  alias Petri.Component.Nav
+  alias Petri.Component.Notes
 
   @notes """
     \"Transforms\" demonstrates using transforms to position, rotate and scale.

@@ -1,7 +1,7 @@
-defmodule Processor.Creatures.Behaviour.VisionTest do
+defmodule Petri.Creatures.Behaviour.VisionTest do
   use ExUnit.Case, async: true
 
-  alias Processor.Creatures.Behaviour.Vision
+  alias Petri.Creatures.Behaviour.Vision
 
   @pi :math.pi()
   @twopi :math.pi() * 2.0
