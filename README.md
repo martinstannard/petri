@@ -1,8 +1,6 @@
 # Petri
 
-Some experimentation using Scenic to visualise Elixir Processes
-
-![Screencast](https://imgur.com/2nQYcth)
+Some experimentation using [Scenic](https://github.com/boydm/scenic) to visualise Elixir Processes
 
 ## Prerequisites
 
@@ -11,8 +9,8 @@ Follow the instruction and install the [`scenic_driver_glfw`](https://github.com
 ## Clone and run
 
 ```
-git clone https://gitlab.com/martinstannard/processor.git
-cd processor
+git clone https://github.com/martinstannard/petri.git
+cd petri
 mix deps.get
   
 mix scenic.run
