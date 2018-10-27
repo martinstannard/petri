@@ -6,6 +6,7 @@ defmodule Processor.Creatures.Messenger do
 
   alias Scenic.Graph
   alias Processor.Creatures.Supervisor
+  alias Processor.Creatures.Behaviour.Count
 
   import Scenic.Primitives, only: [{:text, 2}, {:text, 3}, {:rrect, 3}, {:update_opts, 2}]
 
@@ -47,9 +48,9 @@ defmodule Processor.Creatures.Messenger do
         x: 30 + rem(count, @columns) * 110,
         y: 80 + div(count, @columns) * 70,
         color: @off_color,
-        dirty: false,
-        ping_count: 0
+        dirty: false
       }
+      |> Count.init()
     }
   end
 
@@ -62,7 +63,7 @@ defmodule Processor.Creatures.Messenger do
   end
 
   def handle_call(:ping_count, _, state) do
-    {:reply, state.ping_count, state}
+    {:reply, state.count, state}
   end
 
   def handle_call(:state, _, state) do
@@ -88,7 +89,11 @@ defmodule Processor.Creatures.Messenger do
   defp do_ping(count, state) do
     send_to_sibling(count - 1)
     Process.send_after(self(), :unping, 500)
-    %{state | color: :lime, ping_count: state.ping_count + 1, dirty: true}
+
+    state
+    |> Map.put(:color, :lime)
+    |> Map.put(:dirty, true)
+    |> Count.call()
   end
 
   defp paint(graph, %{dirty: false}) do
@@ -99,7 +104,7 @@ defmodule Processor.Creatures.Messenger do
     graph
     |> Graph.modify(button_id(), &update_opts(&1, fill: state.color))
     |> Graph.modify(text_id(), &update_opts(&1, fill: :white))
-    |> Graph.modify(count_id(), &text(&1, "#{state.ping_count}"))
+    |> Graph.modify(count_id(), &text(&1, "#{state.count}"))
   end
 
   defp send_to_sibling(count) when count < 1, do: nil
@@ -129,7 +134,7 @@ defmodule Processor.Creatures.Messenger do
       t: {state.x + 10, state.y + 20},
       font_size: 20
     )
-    |> text("#{state.ping_count}",
+    |> text("#{state.count}",
       id: count_id(),
       fill: {:color, :white},
       text_align: :center,
