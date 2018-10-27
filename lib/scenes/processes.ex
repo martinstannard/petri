@@ -84,14 +84,6 @@ defmodule Petri.Scene.Processes do
     {:stop, draw(ns)}
   end
 
-  def filter_event({:click, id}, _, state) when is_pid(id) do
-    pid = to_string(:erlang.pid_to_list(id))
-    Supervisor.terminate(pid)
-    new_state = %{state | graph: Graph.delete(state.graph, id)}
-
-    {:stop, draw(new_state)}
-  end
-
   def add_processes(count, state) do
     state
     |> Birth.hatch_n(count)

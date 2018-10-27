@@ -29,10 +29,6 @@ defmodule Petri.Creatures.Messenger do
     GenServer.cast(pid, {:ping, count})
   end
 
-  def ping_count(pid) do
-    GenServer.cast(pid, :ping_count)
-  end
-
   def state(pid) do
     GenServer.cast(pid, :state)
   end
@@ -60,10 +56,6 @@ defmodule Petri.Creatures.Messenger do
 
   def handle_call({:add_to_graph, graph}, _, state) do
     {:reply, add(graph, state), state}
-  end
-
-  def handle_call(:ping_count, _, state) do
-    {:reply, state.count, state}
   end
 
   def handle_call(:state, _, state) do
