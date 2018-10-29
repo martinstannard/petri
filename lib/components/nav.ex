@@ -32,10 +32,6 @@ defmodule Petri.Component.Nav do
       |> text("Scene:", translate: {14, 35}, align: :right)
       |> dropdown(
         {[
-           {"Sensor", Petri.Scene.Sensor},
-           {"Primitives", Petri.Scene.Primitives},
-           {"Components", Petri.Scene.Components},
-           {"Transforms", Petri.Scene.Transforms},
            {"Processes", Petri.Scene.Processes},
            {"Movement", Petri.Scene.Walking},
            {"Smell", Petri.Scene.Smelly},

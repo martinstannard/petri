@@ -6,7 +6,7 @@ use Mix.Config
 config :processor, :viewport, %{
   name: :main_viewport,
   size: {800, 800},
-  default_scene: {Petri.Scene.Splash, Petri.Scene.Sensor},
+  default_scene: {Petri.Scene.Splash, Petri.Scene.Processes},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,
