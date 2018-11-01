@@ -15,3 +15,7 @@ mix deps.get
   
 mix scenic.run
 ```
+
+## Presentation
+
+Slides for my presentation at https://elixir.camp can be found at https://speakerdeck.com/martinstannard/seeing-processes-with-scenic
