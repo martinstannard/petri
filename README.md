@@ -1,6 +1,6 @@
 # Petri
 
-Some experimentation using [Scenic](https://github.com/boydm/scenic) to visualise Elixir Processes
+Some experimentation using [Scenic](https://github.com/boydm/scenic) to visualise Elixir Processes and model biological behaviours such as movement, smell and sight.
 
 ## Prerequisites
 
