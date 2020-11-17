@@ -33,21 +33,18 @@ defmodule Petri.Creatures.Walker do
   end
 
   def init(id) do
-    state = %{
-      id: id,
-      heading: Enum.random(0..628) / 100.0,
-      angle: Enum.random(0..100) / 300.0,
-      velocity: Enum.random(5..100) / 20.0,
-      x: Enum.random(0..800),
-      y: Enum.random(0..800),
-      color: Utils.random_color(),
-      health: 1000,
-      tick: 0
-    }
-
-    {
-      :ok,
-      state
+    { :ok,
+      %{
+        id: id,
+        heading: Enum.random(0..628) / 100.0,
+        angle: Enum.random(0..100) / 300.0,
+        velocity: Enum.random(5..100) / 20.0,
+        x: Enum.random(0..800),
+        y: Enum.random(0..800),
+        color: Utils.random_color(),
+        health: 1000,
+        tick: 0
+      }
     }
   end
 

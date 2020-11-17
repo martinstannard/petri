@@ -57,17 +57,15 @@ defmodule Petri.Scene.Sight do
     {:noreply, new_state}
   end
 
-  @doc "handle event from Add 1 button"
+  @doc "handle events from buttons"
   def filter_event({:click, :btn_one}, _, state) do
     {:stop, Birth.hatch_n(state, 1)}
   end
 
-  @doc "handle event from Add 10 button"
   def filter_event({:click, :btn_ten}, _, state) do
     {:stop, Birth.hatch_n(state, 10)}
   end
 
-  @doc "handle event from Move button"
   def filter_event({:click, :move_food}, _, state) do
     {:stop, Food.move(state)}
   end

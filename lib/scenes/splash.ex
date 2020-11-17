@@ -12,19 +12,19 @@ defmodule Petri.Scene.Splash do
   alias Scenic.ViewPort
   import Scenic.Primitives, only: [{:rect, 3}, {:update_opts, 2}]
 
-  @parrot_path :code.priv_dir(:processor)
-               |> Path.join("/static/images/scenic_parrot.png")
-  @parrot_hash Scenic.Cache.Hash.file!(@parrot_path, :sha)
+  # @parrot_path :code.priv_dir(:processor)
+  #              |> Path.join("/static/images/scenic_parrot.png")
+  # @parrot_hash Scenic.Cache.Hash.file!(@parrot_path, :sha)
 
   @parrot_width 62
   @parrot_height 114
 
   @graph Graph.build()
-         |> rect(
-           {@parrot_width, @parrot_height},
-           id: :parrot,
-           fill: {:image, {@parrot_hash, 0}}
-         )
+         # |> rect(
+         #   {@parrot_width, @parrot_height},
+         #   id: :parrot,
+         #   fill: {:image, {@parrot_hash, 0}}
+         # )
 
   @animate_ms 30
   @finish_delay_ms 1000
@@ -42,12 +42,12 @@ defmodule Petri.Scene.Splash do
     }
 
     # load the parrot texture into the cache
-    Scenic.Cache.File.load(@parrot_path, @parrot_hash)
+    # Scenic.Cache.File.load(@parrot_path, @parrot_hash) #
 
     # move the parrot into the right location
-    graph =
-      Graph.modify(@graph, :parrot, &update_opts(&1, translate: position))
-      |> push_graph()
+    graph = @graph
+      # Graph.modify(@graph, :parrot, &update_opts(&1, translate: position))
+      # |> push_graph()
 
     # start a very simple animation timer
     {:ok, timer} = :timer.send_interval(@animate_ms, :animate)

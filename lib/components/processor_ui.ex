@@ -4,7 +4,7 @@ defmodule Petri.Component.PetriUI do
   alias Scenic.ViewPort
   alias Scenic.Graph
 
-  import Scenic.Primitives, only: [{:text, 3}]
+  # import Scenic.Primitives, only: [{:text, 3}]
   import Scenic.Components
 
   @height 110
@@ -16,7 +16,7 @@ defmodule Petri.Component.PetriUI do
   def verify(_), do: :invalid_data
 
   # ----------------------------------------------------------------------------
-  def init(current_scene, opts) do
+  def init(_current_scene, opts) do
     # Get the viewport width
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} =
       opts[:viewport]
