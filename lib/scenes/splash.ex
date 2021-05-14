@@ -10,11 +10,11 @@ defmodule Petri.Scene.Splash do
   use Scenic.Scene
   alias Scenic.Graph
   alias Scenic.ViewPort
-  import Scenic.Primitives, only: [{:rect, 3}, {:update_opts, 2}]
+  import Scenic.Primitives, only: [{:update_opts, 2}]
 
-  # @parrot_path :code.priv_dir(:processor)
-  #              |> Path.join("/static/images/scenic_parrot.png")
-  # @parrot_hash Scenic.Cache.Hash.file!(@parrot_path, :sha)
+  @parrot_path :code.priv_dir(:processor)
+               |> Path.join("/static/images/scenic_parrot.png")
+  @parrot_hash Scenic.Cache.Support.Hash.file!(@parrot_path, :sha)
 
   @parrot_width 62
   @parrot_height 114
@@ -46,8 +46,8 @@ defmodule Petri.Scene.Splash do
 
     # move the parrot into the right location
     graph = @graph
-      # Graph.modify(@graph, :parrot, &update_opts(&1, translate: position))
-      # |> push_graph()
+      Graph.modify(@graph, :parrot, &update_opts(&1, translate: position))
+      |> push_graph()
 
     # start a very simple animation timer
     {:ok, timer} = :timer.send_interval(@animate_ms, :animate)
@@ -60,7 +60,7 @@ defmodule Petri.Scene.Splash do
       alpha: 0
     }
 
-    {:ok, state}
+    {:ok, state, push: @graph}
   end
 
   # --------------------------------------------------------

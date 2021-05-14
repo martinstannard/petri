@@ -43,7 +43,7 @@ defmodule Petri.Scene.Processes do
       }
       |> Pause.init(%{})
 
-    {:ok, add_processes(7, state)}
+    {:ok, add_processes(7, state), push: graph}
   end
 
   def handle_info(:animate, state) do
