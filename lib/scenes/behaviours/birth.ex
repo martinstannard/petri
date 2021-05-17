@@ -28,14 +28,12 @@ defmodule Petri.Scenes.Behaviours.Birth do
   end
 
   @doc "adds a new creature to state"
-  def hatch(state) do
+  def hatch({inner_state, graph}) do
     {:ok, process} =
-      DynamicSupervisor.start_child(CreatureSupervisor, {state.creature, state.count})
+      DynamicSupervisor.start_child(CreatureSupervisor, {inner_state.creature, inner_state.count})
 
-    %{
-      state
-      | graph: state.creature.add_to_graph(process, state.graph),
-        count: state.count + 1
-    }
+    nis = %{inner_state | count: inner_state.count + 1}
+    ng = nis.creature.add_to_graph(process, graph)
+    {nis, ng}
   end
 end

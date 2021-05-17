@@ -6,29 +6,31 @@ defmodule Petri.Scenes.Behaviours.Pause do
   import Scenic.Components
 
   @doc "adds state and UI for pause"
-  def init(state, _opts \\ %{}) do
-    g =
-      state.graph
+  def init({inner_state, graph}, _opts \\ %{}) do
+    ng =
+      graph
       |> button("Start",
         id: :pause,
         theme: :primary,
         translate: {500, 730}
       )
 
-    state
+    nis = inner_state
     |> Map.put(:paused, true)
-    |> Map.put(:graph, g)
+    {nis, ng}
   end
 
   @doc "toggles the paused state and updates the UI"
-  def call(state) do
-    paused = !state.paused
+  def call({inner_state, graph}) do
+    paused = !inner_state.paused
 
-    g =
-      state.graph
+    ng =
+      graph
       |> Graph.modify(:pause, &button(&1, pause_label(paused)))
 
-    %{state | graph: g, paused: paused}
+    nis = %{inner_state | paused: paused}
+
+    {nis, ng}
   end
 
   def pause_label(true), do: "Start"
